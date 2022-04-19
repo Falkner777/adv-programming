@@ -4,7 +4,7 @@ from pprint import pprint
 import requests
 
 
-class Controller:
+class WeatherController:
 
     def __init__(self, api_key, default_call, units, language=None):
         self._API_KEY = api_key
@@ -36,11 +36,12 @@ class Controller:
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={latitude}&lon={longitude}&" + \
                 f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
+        
         data = requests.get(apiCALL)
 
         if data.status_code == 400:
             raise BadRequest(data.reason)
-            
+
         return data 
 
 class BadRequest(Exception):
@@ -49,5 +50,5 @@ class BadRequest(Exception):
         self.message = message
 
     def __str__(self):
-        return f"{self.message}. Not acceptable longitude or latitude."
+        return f"\n{self.message}. Not acceptable longitude or latitude."
         
