@@ -1,5 +1,5 @@
 import json
-from pprint import pprint
+
 
 import requests
 
@@ -28,13 +28,18 @@ class WeatherController:
         print("WeEaTheR")
     
     def getHourlyData(self, latitude, longitude):
-        if not isinstance(longitude, float):
-            raise TypeError(f"Longitude but be of type float.{type(longitude)} given")
-        if not isinstance(latitude, float):
-            raise TypeError(f"Latitude but be of type float.{type(latitude)} given")
+        try:
+            lon = float(longitude)
+        except:
+            raise TypeError(f"Longitude but be of type float.{type(lon)} given")
+
+        try:
+            lat = float(latitude)
+        except:
+            raise TypeError(f"Latitude but be of type float.{type(lat)} given")
 
         apiCALL = self.getDefaultCall() + \
-            f"onecall?lat={latitude}&lon={longitude}&" + \
+            f"onecall?lat={lat}&lon={lon}&" + \
                 f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
         
         data = requests.get(apiCALL)
