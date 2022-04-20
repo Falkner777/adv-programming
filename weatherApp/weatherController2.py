@@ -25,7 +25,17 @@ class WeatherController2:
         return self.language
     
     def getWeatherCity(self, cityId):
-        print("WeEaTheR")
+        try:
+            City_id= int(cityId)
+        except :
+            raise TypeError(f"City ID must be of type int.{type(City_id)} given")
+        apiCALL = self.getDefaultCall() + \
+            f"weather?id={City_id}&" + \
+                f"units={self.getUnits()}&appid={self.__getAPIKEY()}"    
+        data = requests.get(apiCALL)
+
+        return data
+
     
     def getHourlyData(self, latitude, longitude):
         try:
