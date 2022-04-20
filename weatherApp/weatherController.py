@@ -1,14 +1,13 @@
 import json
-
-
+from badRequest import BadRequest
 import requests
 
 
 class WeatherController:
 
-    def __init__(self, api_key, default_call, units, language=None):
+    def __init__(self, api_key, units, language=None):
         self._API_KEY = api_key
-        self.defaultCall = default_call
+        self.defaultCall = "https://api.openweathermap.org/data/2.5/"
         self.units = units
         self.language = language
     
@@ -49,11 +48,3 @@ class WeatherController:
 
         return data 
 
-class BadRequest(Exception):
-
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return f"\n{self.message}. Not acceptable longitude or latitude."
-        
