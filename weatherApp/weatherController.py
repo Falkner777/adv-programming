@@ -4,7 +4,7 @@ import json
 import requests
 
 
-class WeatherController2:
+class WeatherController:
 
     def __init__(self, api_key, default_call, units, language=None):
         self._API_KEY = api_key
