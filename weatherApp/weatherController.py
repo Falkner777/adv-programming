@@ -1,6 +1,9 @@
+from audioop import add
 import json
 from badRequest import BadRequest
 import requests
+
+from coordController import CoordController
 
 
 class WeatherController:
@@ -10,7 +13,8 @@ class WeatherController:
         self.defaultCall = "https://api.openweathermap.org/data/2.5/"
         self.units = units
         self.language = language
-    
+        self.coordsConverter = CoordController()
+
     def __getAPIKEY(self):
         return self._API_KEY
 
@@ -26,25 +30,20 @@ class WeatherController:
     def getWeatherCity(self, cityId):
         print("WeEaTheR")
     
-    def getHourlyData(self, latitude, longitude):
-        try:
-            lon = float(longitude)
-        except:
-            raise TypeError(f"Longitude but be of type float.{type(lon)} given")
-
-        try:
-            lat = float(latitude)
-        except:
-            raise TypeError(f"Latitude but be of type float.{type(lat)} given")
-
+    def getHourlyData(self, address):
+        
+        address_data = self.coordsConverter.getCityLonLat(address).json()[0]
+        lat = address_data["lat"]
+        lon = address_data["lon"]
+        
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \
                 f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
         
         data = requests.get(apiCALL)
 
-        if data.status_code == 400:
-            raise BadRequest(data.reason)
+        if data.status_code in range(400,600):
+            raise BadRequest(data.status_code)
 
         return data 
 

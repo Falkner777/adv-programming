@@ -4,24 +4,25 @@ from badRequest import BadRequest
 
 class CoordController():
 
-    def __init__(self, api_key):
-        self._API_KEY = api_key
-        self.defaultCall = "f7abd3f018df76b5c983da7768b7cf2a"
+    def __init__(self):
+        self._API_KEY = "40532d33f39f395622bd004abeb82179"
+        self.defaultCall = "http://api.openweathermap.org/geo/1.0/"
     
     def __getAPIKEY(self):
         return self._API_KEY
 
     def getDefaultCall(self):
         return self.defaultCall
-
-    def getCityLonLat(self, cityName, resultLimit):
+        
+    
+    def getCityLonLat(self, cityName, resultLimit=1):
         
         apiCall = self.getDefaultCall() + f"direct?q={cityName}" +\
-            f"&limit{resultLimit}&appid={self.__getAPIKEY}"
+            f"&limit{resultLimit}&appid={self.__getAPIKEY()}"
 
         data = requests.get(apiCall)
 
-        if data.status_code in [400,401,402,404]:
-            raise BadRequest(data.reason)
+        if data.status_code in range(400,600):
+            raise BadRequest(data.status_code)
 
         return data 
