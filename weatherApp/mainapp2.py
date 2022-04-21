@@ -1,4 +1,4 @@
-from email.policy import default
+
 from weatherController2 import WeatherController2
 from pprint import pprint
 
