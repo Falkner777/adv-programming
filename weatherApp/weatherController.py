@@ -32,9 +32,8 @@ class WeatherController:
     
     def getHourlyData(self, address):
         
-        address_data = self.coordsConverter.getCityLonLat(address).json()[0]
-        lat = address_data["lat"]
-        lon = address_data["lon"]
+        lon, lat = self.coordsConverter.getCityLonLat(address)
+        
         
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \

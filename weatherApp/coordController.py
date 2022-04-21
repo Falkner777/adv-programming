@@ -1,6 +1,9 @@
 import json
 import requests
 from badRequest import BadRequest
+from emptyRequestException import EmptyRequestException
+
+
 
 class CoordController():
 
@@ -25,4 +28,11 @@ class CoordController():
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)
 
-        return data 
+        dataJson = data.json()[0]
+
+        if len(dataJson) == 0:
+            raise EmptyRequestException()
+
+
+        return dataJson["lon"], dataJson["lat"] 
+
