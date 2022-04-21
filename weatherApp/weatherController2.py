@@ -27,20 +27,14 @@ class WeatherController2:
     def getWeatherCity(self, CityName):
         apiCALL = self.getDefaultCall() + \
             f"weather?q={CityName}&" + \
-                f"units={self.getUnits()}&appid={self.__getAPIKEY()}"    
+                f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__getAPIKEY()}"    
         data = requests.get(apiCALL)
-
+        if data.status_code in range(400,600):
+            raise BadRequest(data.status_code)
         return data
 
     
     def getHourlyData(self, latitude, longitude):
         return self.hourly
 
-class BadRequest(Exception):
-
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return f"\n{self.message}. Not acceptable longitude or latitude."
         
