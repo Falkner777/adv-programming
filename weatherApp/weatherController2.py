@@ -24,13 +24,9 @@ class WeatherController2:
     def getLanguage(self):
         return self.language
     
-    def getWeatherCity(self, cityId):
-        try:
-            City_id= int(cityId)
-        except :
-            raise TypeError(f"City ID must be of type int.{type(City_id)} given")
+    def getWeatherCity(self, CityName):
         apiCALL = self.getDefaultCall() + \
-            f"weather?id={City_id}&" + \
+            f"weather?q={CityName}&" + \
                 f"units={self.getUnits()}&appid={self.__getAPIKEY()}"    
         data = requests.get(apiCALL)
 
@@ -38,26 +34,7 @@ class WeatherController2:
 
     
     def getHourlyData(self, latitude, longitude):
-        try:
-            lon = float(longitude)
-        except:
-            raise TypeError(f"Longitude but be of type float.{type(lon)} given")
-
-        try:
-            lat = float(latitude)
-        except:
-            raise TypeError(f"Latitude but be of type float.{type(lat)} given")
-
-        apiCALL = self.getDefaultCall() + \
-            f"onecall?lat={lat}&lon={lon}&" + \
-                f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
-        
-        data = requests.get(apiCALL)
-
-        if data.status_code == 400:
-            raise BadRequest(data.reason)
-
-        return data 
+        return self.hourly
 
 class BadRequest(Exception):
 
