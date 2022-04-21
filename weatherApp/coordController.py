@@ -28,11 +28,12 @@ class CoordController():
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)
 
-        dataJson = data.json()[0]
+        dataJson = data.json()
 
         if len(dataJson) == 0:
             raise EmptyRequestException()
 
+        dataJson = dataJson[0]
 
         return dataJson["lon"], dataJson["lat"] 
 
