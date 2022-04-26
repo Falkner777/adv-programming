@@ -33,16 +33,29 @@ class WeatherController:
     def getHourlyData(self, address):
         
         lon, lat = self.coordsConverter.getCityLonLat(address)
-        
-        
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \
                 f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
         
         data = requests.get(apiCALL)
-
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)
 
-        return data 
+        dataJson = data.json()["hourly"][:24]
+        return dataJson
+
+    def getDailyData(self, address):
+        
+        lon, lat = self.coordsConverter.getCityLonLat(address)
+        apiCALL = self.getDefaultCall() + \
+            f"onecall?lat={lat}&lon={lon}&" + \
+                f"exclude=current,minutely,hourly,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
+        
+        data = requests.get(apiCALL)
+        if data.status_code in range(400,600):
+            raise BadRequest(data.status_code)
+
+        dataJson = data.json()["daily"][:7]
+        return dataJson
+
 

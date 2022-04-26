@@ -7,5 +7,5 @@ default_call = "https://api.openweathermap.org/data/2.5/"
 units = "metric"
 app = WeatherController2(API_KEY,default_call, units)
 Cityname="Lefkada"
-data = app.gethumidityCity(Cityname)
+data = app.getWeatherCity(Cityname)
 pprint(data)
