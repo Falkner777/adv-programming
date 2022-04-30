@@ -30,17 +30,7 @@ class WeatherController2:
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)
         datap=data.json()
-        datap=datap["main"]["temp"]
-        return datap
-    def gethumidityCity(self,CityName):
-        apiCALL = self.getDefaultCall() + \
-            f"weather?q={CityName}&" + \
-                f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__getAPIKEY()}"    
-        data = requests.get(apiCALL)
-        if data.status_code in range(400,600):
-            raise BadRequest(data.status_code)
-        datap=data.json()
-        datap=datap["main"]["humidity"]
+        datap=datap["main"]
         return datap
 
     
