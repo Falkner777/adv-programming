@@ -4,7 +4,7 @@ class DataManager():
     def __init__(self):
         pass
 
-    @staticmethod
+    @staticmethod 
     def returnTimestamps(data, typeTime):
         timeString = ''
         match typeTime:
@@ -23,6 +23,14 @@ class DataManager():
 
     @staticmethod
     def returnTemperatures(data, tempType = 0):
+        """
+        This function takes in a list of dictionaries and returns a list of temperatures
+        
+        :param data: the data you want to get the temperatures from
+        :param tempType: 0 for actual temperature, 1 for actual and feels like temperature, defaults to
+        0 (optional)
+        :return: A list of temperatures
+        """
         temperatures = []
         if tempType == 0:
             for temp in data:

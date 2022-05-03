@@ -30,11 +30,11 @@ class WeatherController2:
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)
         datap=data.json()
-        datap=datap["main"]
         return datap
 
     
-    def getHourlyData(self, latitude, longitude):
-        return self.hourly
-
+    def getMaps(self, layer, z,x,y):
+        apiCALL = f"https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png?appid={self.__getAPIKEY()}"
+        data = requests.get(apiCALL)
         
+        return data

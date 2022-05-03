@@ -27,10 +27,24 @@ class WeatherController:
     def getLanguage(self):
         return self.language
     
-    def getWeatherCity(self, cityId):
-        print("WeEaTheR")
+    def getWeatherCity(self, CityName):
+        apiCALL = self.getDefaultCall() + \
+            f"weather?q={CityName}&" + \
+                f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__getAPIKEY()}"    
+        data = requests.get(apiCALL)
+        if data.status_code in range(400,600):
+            raise BadRequest(data.status_code)
+        datap=data.json()
+        return datap
     
     def getHourlyData(self, address):
+        """
+        It takes an address, converts it to coordinates, and then uses those coordinates to make a call
+        to the OpenWeatherMap API to get the hourly weather data for the next 24 hours.
+        
+        :param address: The address of the city you want to get the weather for
+        :return: A list of dictionaries.
+        """
         
         lon, lat = self.coordsConverter.getCityLonLat(address)
         apiCALL = self.getDefaultCall() + \
@@ -45,6 +59,13 @@ class WeatherController:
         return dataJson
 
     def getDailyData(self, address):
+        """
+        It takes an address, converts it to coordinates, and then makes a call to the API to get the
+        daily weather data for the next 7 days
+        
+        :param address: The address of the city you want to get the weather for
+        :return: A list of dictionaries.
+        """
         
         lon, lat = self.coordsConverter.getCityLonLat(address)
         apiCALL = self.getDefaultCall() + \
