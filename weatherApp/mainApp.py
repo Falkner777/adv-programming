@@ -5,8 +5,10 @@ import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
 from weatherController import WeatherController
 import weatherGUI
-API_KEY = "40532d33f39f395622bd004abeb82179"
-geoKEY = "f7abd3f018df76b5c983da7768b7cf2a"
+import keys
+
+API_KEY = keys.API_KEY
+
 default_call = "https://api.openweathermap.org/data/2.5/"
 units = "metric"
 
@@ -14,7 +16,7 @@ class WeatherApp(qtw.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.WeatherCall = WeatherController(API_KEY, units)
+        self.WeatherCaller = WeatherController(API_KEY, units)
         self.GUI = weatherGUI.Ui_Form()
         self.GUI.setupUi(self)
         self.GUI.stackedWidget.setCurrentIndex(0)
@@ -25,7 +27,9 @@ class WeatherApp(qtw.QWidget):
         self.show()
 
     def search(self):
-        cityName = self.GUI.searchEdit.text()
+        
+        
+        
         self.GUI.stackedWidget.setCurrentIndex(1)
 
     def goBack(self):

@@ -2,13 +2,13 @@ import json
 import requests
 from badRequest import BadRequest
 from emptyRequestException import EmptyRequestException
-
+import keys
 
 
 class CoordController():
 
     def __init__(self):
-        self._API_KEY = "40532d33f39f395622bd004abeb82179"
+        self._API_KEY = keys.API_KEY
         self.defaultCall = "http://api.openweathermap.org/geo/1.0/"
     
     def __getAPIKEY(self):
