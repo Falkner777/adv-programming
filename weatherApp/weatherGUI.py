@@ -43,15 +43,8 @@ class Ui_Form(object):
 "\n"
 "color: #FFFFFF;\n"
 "background-color: transparent;\n"
-"text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);\n"
 "")
         self.titleLabel.setObjectName("titleLabel")
-        self.blobIcon = QtWidgets.QLabel(self.Search)
-        self.blobIcon.setGeometry(QtCore.QRect(49, 48, 271, 161))
-        self.blobIcon.setStyleSheet("background-color: transparent;")
-        self.blobIcon.setText("")
-        self.blobIcon.setPixmap(QtGui.QPixmap(":/icons/icons/vector.png"))
-        self.blobIcon.setObjectName("blobIcon")
         self.searchButton = QtWidgets.QPushButton(self.Search)
         self.searchButton.setGeometry(QtCore.QRect(127, 431, 137, 51))
         self.searchButton.setStyleSheet("\n"
@@ -82,10 +75,16 @@ class Ui_Form(object):
 "border-radius: 20px;\n"
 "")
         self.searchEdit.setObjectName("searchEdit")
+        self.blobIcon_3 = QtWidgets.QLabel(self.Search)
+        self.blobIcon_3.setGeometry(QtCore.QRect(70, -10, 421, 211))
+        self.blobIcon_3.setStyleSheet("background-color: transparent;")
+        self.blobIcon_3.setText("")
+        self.blobIcon_3.setPixmap(QtGui.QPixmap(":/icons/icons/vector.png"))
+        self.blobIcon_3.setObjectName("blobIcon_3")
         self.cloudIcon.raise_()
-        self.blobIcon.raise_()
         self.searchButton.raise_()
         self.searchEdit.raise_()
+        self.blobIcon_3.raise_()
         self.titleLabel.raise_()
         self.stackedWidget.addWidget(self.Search)
         self.Main = QtWidgets.QWidget()
@@ -106,7 +105,7 @@ class Ui_Form(object):
         self.weatherIcon.setPixmap(QtGui.QPixmap(":/icons/icons/arcticons_hyperlocal-weather.png"))
         self.weatherIcon.setObjectName("weatherIcon")
         self.windspeedValue = QtWidgets.QLabel(self.Main)
-        self.windspeedValue.setGeometry(QtCore.QRect(170, 564, 45, 23))
+        self.windspeedValue.setGeometry(QtCore.QRect(170, 564, 81, 23))
         self.windspeedValue.setStyleSheet("\n"
 "\n"
 "font-family: \'Roboto\';\n"
@@ -121,13 +120,13 @@ class Ui_Form(object):
 "")
         self.windspeedValue.setObjectName("windspeedValue")
         self.blobIcon_2 = QtWidgets.QLabel(self.Main)
-        self.blobIcon_2.setGeometry(QtCore.QRect(54, 36, 271, 161))
+        self.blobIcon_2.setGeometry(QtCore.QRect(70, -20, 421, 211))
         self.blobIcon_2.setStyleSheet("background-color: transparent;")
         self.blobIcon_2.setText("")
         self.blobIcon_2.setPixmap(QtGui.QPixmap(":/icons/icons/vector.png"))
         self.blobIcon_2.setObjectName("blobIcon_2")
         self.feelsLlikeValue = QtWidgets.QLabel(self.Main)
-        self.feelsLlikeValue.setGeometry(QtCore.QRect(170, 533, 27, 22))
+        self.feelsLlikeValue.setGeometry(QtCore.QRect(170, 533, 81, 22))
         self.feelsLlikeValue.setStyleSheet("\n"
 "\n"
 "font-family: \'Roboto\';\n"
@@ -141,7 +140,7 @@ class Ui_Form(object):
 "")
         self.feelsLlikeValue.setObjectName("feelsLlikeValue")
         self.pressureValue = QtWidgets.QLabel(self.Main)
-        self.pressureValue.setGeometry(QtCore.QRect(170, 595, 44, 23))
+        self.pressureValue.setGeometry(QtCore.QRect(170, 595, 81, 23))
         self.pressureValue.setStyleSheet("\n"
 "\n"
 "font-family: \'Roboto\';\n"
@@ -155,9 +154,9 @@ class Ui_Form(object):
 "\n"
 "")
         self.pressureValue.setObjectName("pressureValue")
-        self.tempLabel_2 = QtWidgets.QLabel(self.Main)
-        self.tempLabel_2.setGeometry(QtCore.QRect(58, 503, 74, 22))
-        self.tempLabel_2.setStyleSheet("\n"
+        self.tempLabel = QtWidgets.QLabel(self.Main)
+        self.tempLabel.setGeometry(QtCore.QRect(58, 503, 74, 22))
+        self.tempLabel.setStyleSheet("\n"
 "font-family: \'Roboto\';\n"
 "font-style: normal;\n"
 "font-weight: 400;\n"
@@ -168,8 +167,8 @@ class Ui_Form(object):
 "color: #FFFFFF;\n"
 "\n"
 "")
-        self.tempLabel_2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.tempLabel_2.setObjectName("tempLabel_2")
+        self.tempLabel.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.tempLabel.setObjectName("tempLabel")
         self.pressureLabel = QtWidgets.QLabel(self.Main)
         self.pressureLabel.setGeometry(QtCore.QRect(58, 596, 76, 22))
         self.pressureLabel.setStyleSheet("\n"
@@ -207,9 +206,9 @@ class Ui_Form(object):
 "")
         self.windspeedLabel.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.windspeedLabel.setObjectName("windspeedLabel")
-        self.tempLabel = QtWidgets.QLabel(self.Main)
-        self.tempLabel.setGeometry(QtCore.QRect(121, 204, 172, 114))
-        self.tempLabel.setStyleSheet("\n"
+        self.tempLabelBig = QtWidgets.QLabel(self.Main)
+        self.tempLabelBig.setGeometry(QtCore.QRect(-9, 204, 391, 114))
+        self.tempLabelBig.setStyleSheet("\n"
 "font-family: \'Roboto\';\n"
 "font-style: normal;\n"
 "font-weight: 300;\n"
@@ -221,8 +220,8 @@ class Ui_Form(object):
 "color: #FFFFFF;\n"
 "\n"
 "")
-        self.tempLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.tempLabel.setObjectName("tempLabel")
+        self.tempLabelBig.setAlignment(QtCore.Qt.AlignCenter)
+        self.tempLabelBig.setObjectName("tempLabelBig")
         self.feelslikeIcon = QtWidgets.QLabel(self.Main)
         self.feelslikeIcon.setGeometry(QtCore.QRect(32, 535, 20, 20))
         self.feelslikeIcon.setMaximumSize(QtCore.QSize(20, 20))
@@ -309,12 +308,11 @@ class Ui_Form(object):
 "\n"
 "color: #FFFFFF;\n"
 "background-color: transparent;\n"
-"text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);\n"
 "")
         self.cityLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.cityLabel.setObjectName("cityLabel")
         self.humidityValue = QtWidgets.QLabel(self.Main)
-        self.humidityValue.setGeometry(QtCore.QRect(170, 471, 31, 23))
+        self.humidityValue.setGeometry(QtCore.QRect(170, 471, 71, 23))
         self.humidityValue.setStyleSheet("\n"
 "\n"
 "font-family: \'Roboto\';\n"
@@ -336,7 +334,7 @@ class Ui_Form(object):
         self.tempIcon.setPixmap(QtGui.QPixmap(":/icons/icons/carbon_temperature.png"))
         self.tempIcon.setObjectName("tempIcon")
         self.tempValue = QtWidgets.QLabel(self.Main)
-        self.tempValue.setGeometry(QtCore.QRect(170, 502, 27, 22))
+        self.tempValue.setGeometry(QtCore.QRect(170, 502, 81, 22))
         self.tempValue.setStyleSheet("\n"
 "\n"
 "font-family: \'Roboto\';\n"
@@ -413,18 +411,6 @@ class Ui_Form(object):
         self.goBackButton.setDefault(False)
         self.goBackButton.setFlat(True)
         self.goBackButton.setObjectName("goBackButton")
-        self.refreshButton = QtWidgets.QPushButton(self.Main)
-        self.refreshButton.setGeometry(QtCore.QRect(340, 13, 31, 31))
-        self.refreshButton.setStyleSheet("border-color:transparent")
-        self.refreshButton.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/icons/icons/codicon_refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.refreshButton.setIcon(icon1)
-        self.refreshButton.setIconSize(QtCore.QSize(28, 28))
-        self.refreshButton.setAutoDefault(False)
-        self.refreshButton.setDefault(False)
-        self.refreshButton.setFlat(True)
-        self.refreshButton.setObjectName("refreshButton")
         self.stackedWidget.addWidget(self.Main)
         self.verticalLayout.addWidget(self.stackedWidget)
 
@@ -439,10 +425,10 @@ class Ui_Form(object):
         self.windspeedValue.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:14pt;\">45</span><span style=\" font-size:10pt;\">m/s</span></p></body></html>"))
         self.feelsLlikeValue.setText(_translate("Form", "25°"))
         self.pressureValue.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:14pt;\">23</span><span style=\" font-size:10pt;\">hPa</span></p></body></html>"))
-        self.tempLabel_2.setText(_translate("Form", "Temper. :"))
+        self.tempLabel.setText(_translate("Form", "Temper. :"))
         self.pressureLabel.setText(_translate("Form", "Pressure:"))
         self.windspeedLabel.setText(_translate("Form", "Wind-speed:"))
-        self.tempLabel.setText(_translate("Form", "26°"))
+        self.tempLabelBig.setText(_translate("Form", "26°"))
         self.sevenDaysButton.setText(_translate("Form", "7-Days"))
         self.humidityLabel.setText(_translate("Form", "Humidity:"))
         self.mapsButton.setText(_translate("Form", "Maps"))

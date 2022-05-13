@@ -3,13 +3,14 @@ from re import S
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
+from dataManager import DataManager
 from weatherController import WeatherController
 import weatherGUI
 import keys
 
 API_KEY = keys.API_KEY
 
-default_call = "https://api.openweathermap.org/data/2.5/"
+
 units = "metric"
 
 class WeatherApp(qtw.QWidget):
@@ -27,9 +28,16 @@ class WeatherApp(qtw.QWidget):
         self.show()
 
     def search(self):
-        
-        
-        
+        cityName = self.GUI.searchEdit.text()
+        data = self.WeatherCaller.getWeatherCity(cityName)
+        info = DataManager.returnCurrentInfo(data)
+        self.GUI.humidityValue.setText(str(info["humidity"]))
+        self.GUI.tempLabelBig.setText(str(info["temp"])+ '°')
+        self.GUI.tempLabel.setText(str(info["temp"])+ '°')
+        self.GUI.feelsLlikeValue.setText(str(info["feels_like"])+ '°')
+        self.GUI.pressureValue.setText(str(info["pressure"]))
+        self.GUI.windspeedValue.setText(str(info["wind"]))
+        self.GUI.weatherDescription.setText(info["description"])
         self.GUI.stackedWidget.setCurrentIndex(1)
 
     def goBack(self):

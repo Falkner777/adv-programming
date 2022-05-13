@@ -51,5 +51,17 @@ class DataManager():
         
         return toReturn
 
+    @staticmethod
+    def returnCurrentInfo(data):
+        description = data["weather"][0]["description"]
+        temp = data["main"]["temp"]
+        feels_like = data["main"]["feels_like"]
+        pressure = data["main"]["pressure"]
+        humidity = data["main"]["humidity"]
+        wind = data["wind"]["speed"]
+        icon = data["weather"][0]["icon"]
+        toReturn = {"description":description, "temp":temp, "feels_like": feels_like, "pressure": pressure, "humidity":humidity,\
+            "wind": wind, "icon": icon}
         
+        return toReturn
         
