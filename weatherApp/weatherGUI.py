@@ -72,6 +72,15 @@ class Ui_Form(object):
 "background: #FFFFFF;\n"
 "\n"
 "\n"
+"font-family: 'Roboto';"
+"font-style: normal;"
+"font-weight: 300;"
+"font-size: 18px;"
+"line-height: 21px;"
+"letter-spacing: 0.04em;"
+
+"color: rgba(0, 0, 0, 0.53);"
+"padding:10px;"
 "border-radius: 20px;\n"
 "")
         self.searchEdit.setObjectName("searchEdit")

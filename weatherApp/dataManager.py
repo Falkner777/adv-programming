@@ -53,6 +53,13 @@ class DataManager():
 
     @staticmethod
     def returnCurrentInfo(data):
+        """
+        It takes in a dictionary of weather data and returns a dictionary of the current weather
+        information
+        
+        :param data: the data that is returned from the API call
+        :return: A dictionary with the current weather information.
+        """
         description = data["weather"][0]["description"]
         temp = data["main"]["temp"]
         feels_like = data["main"]["feels_like"]

@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from re import S
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
@@ -10,6 +11,7 @@ import weatherGUI
 import keys
 import string
 import resources
+from matplotlib import pyplot as plt
 API_KEY = keys.API_KEY
 
 
@@ -27,14 +29,15 @@ class WeatherApp(qtw.QWidget):
 
         self.GUI.searchButton.clicked.connect(self.search)
         self.GUI.goBackButton.clicked.connect(self.goBack)
+        self.GUI.sevenDaysButton.clicked.connect(self.sevenDayPlot)
         
         self.show()
 
     def search(self):
         """
-        It takes the text from the search bar, checks if it's empty, if it's not, it calls the API and
-        gets the data, then it displays it on the GUI
-        :return: the current weather information for the city that was searched.
+        It takes the city name from the search bar, checks if it's empty, if it's not, it calls the API
+        and gets the data, then it displays it on the GUI
+        :return: the icon that is mapped to the icon code.
         """
         self.cityName = self.GUI.searchEdit.text()
         if self.cityName == "":
@@ -87,7 +90,15 @@ class WeatherApp(qtw.QWidget):
         
         return qtg.QPixmap(":/icons/icons/"+icons[icon].strip())
 
-  
+    def sevenDayPlot(self):
+        plt.figure(1)
+        data = self.WeatherCaller.getDailyData(self.cityName)
+        temps = DataManager.returnTemperatures(data, 0)
+        hours = DataManager.returnData(data, "dt")
+        temp = [(x["min"], x["max"]) for x in temps]
+        days = [datetime.utcfromtimestamp(x).strftime("%d %a") for x in hours]
+        plt.plot(days,temp,".")
+        plt.show()
 
     def goBack(self):
         self.GUI.stackedWidget.setCurrentIndex(0)
