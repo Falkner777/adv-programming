@@ -10,6 +10,14 @@ class DataManager():
 
     @staticmethod 
     def returnTimestamps(data, typeTime):
+        """
+        It takes in a list of dictionaries and a string, and returns a list of strings
+        
+        :param data: The data that we're going to be using to create the graph
+        :param typeTime: This is the type of time you want to return. You can choose between 'day' or
+        'hour'
+        :return: A list of timestamps in the format specified by the typeTime parameter.
+        """
         timeString = ''
         match typeTime:
             case 'hour':
@@ -27,6 +35,15 @@ class DataManager():
 
     @staticmethod
     def returnTemperaturesHourly(data, feels_like =0):
+        """
+        It takes in a list of dictionaries and returns a list of temperatures and a list of feels_like
+        temperatures
+        
+        :param data: The data returned from the API call
+        :param feels_like: if set to 1, it will return the feels_like temperatures as well, defaults to
+        0 (optional)
+        :return: A list of temperatures and a list of feels_like temperatures
+        """
         if not isinstance(data,list):
             raise TypeError(f"Data type not acceptable: expected <class 'list'>, <{type(data)}> found")
         temperatures = []
@@ -45,7 +62,7 @@ class DataManager():
 
     @staticmethod
         
-    def returnTemperaturesDaily(data, morn=1, day=0, eve=0, night=0, minn=0, maxx=0, feels_like=0):
+    def returnTemperaturesDaily(data, morn=1, day=0, eve=0, night=0, minn=0, maxx=0, feels=0):
         """
         It takes a list of dictionaries, each dictionary containing a temperature key with a dictionary
         of temperatures for the day, and returns a dictionary of lists of temperatures for the day, with
@@ -79,11 +96,11 @@ class DataManager():
                         "max": [],
 
         }
-        if morn + day + eve + night + minn + maxx + feels_like == 0:
+        if morn + day + eve + night + minn + maxx + feels == 0:
             raise Exception("EmptyRequest. You haven't choosen any temperature to return.")
 
         for daytime in data:
-            if feels_like:
+            if feels:
                 if morn:
                     temperatures["morn"].append(daytime['temp']["morn"])
                     feels_like["morn"].append(daytime['feels_like']["morn"])
@@ -122,16 +139,24 @@ class DataManager():
                 keysToRemove.append(key)
         for key in keysToRemove: 
             del temperatures[key]
-            if feels_like:
+            if feels:
                 del feels_like[key]
 
-        if feels_like:
+        if feels:
             return temperatures, feels_like
         else:
             return temperatures
 
     @staticmethod
     def returnData(data, dataName):
+        """
+        > This function takes in a list of dictionaries and a string, and returns a list of values from
+        the dictionaries that correspond to the string
+        
+        :param data: the data to be returned
+        :param dataName: The name of the data you want to return
+        :return: A list of the values of the dataName key in the data dictionary.
+        """
         toReturn = []
         if dataName in data[0].keys():
             for dataSlice in data:

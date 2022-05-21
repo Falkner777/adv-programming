@@ -93,11 +93,15 @@ class WeatherApp(qtw.QWidget):
     def sevenDayPlot(self):
         plt.figure(1)
         data = self.WeatherCaller.getDailyData(self.cityName)
-        temps = DataManager.returnTemperatures(data, 0)
-        hours = DataManager.returnData(data, "dt")
-        temp = [(x["min"], x["max"]) for x in temps]
-        days = [datetime.utcfromtimestamp(x).strftime("%d %a") for x in hours]
-        plt.plot(days,temp,".")
+        temps = DataManager.returnTemperaturesDaily(data,morn=1, day=1,eve=1, night=1)
+        days = DataManager.returnTimestamps(data, 'day')
+        plt.plot(days,temps['morn'],days,temps['day'],days,temps['eve'],days,temps['night'],lw=2)
+
+        plt.fill_between(days,temps['morn'],alpha=0.2)
+        plt.fill_between(days,temps['day'],alpha=0.2)
+        plt.fill_between(days,temps['eve'],alpha=0.2)
+        plt.fill_between(days,temps['night'],alpha=0.2)
+        plt.xticks(rotation=15)
         plt.show()
 
     def goBack(self):
