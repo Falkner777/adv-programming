@@ -4,20 +4,12 @@ import numpy as np
 import keys
 import requests
 from matplotlib import pyplot as plt
-from io import BytesIO
-from PIL import Image
+from weatherController import WeatherController
+from dataManager import DataManager as dm
 
-layer = "temp_new"
-call = f"https://tile.openweathermap.org/map/{layer}/{0}/{0}/{0}.png?appid={keys.API_KEY}"
+weatherCaller = WeatherController(keys.API_KEY, 'metric')
 
-data = requests.get(call)
-try:
-    print(data.json())
-except Exception:
-    pass
-im = BytesIO(data.content)
-data = Image.open(im)
-array = np.asarray(data)
-print(array.shape)
-# plt.imshow(data)
-# plt.show()
+data = weatherCaller.getDailyData("Athens")
+
+test = dm.returnTemperaturesDaily(data,morn=0)
+print(test)
