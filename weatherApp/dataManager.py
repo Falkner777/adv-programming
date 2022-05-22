@@ -36,49 +36,47 @@ class DataManager():
     @staticmethod
     def returnTemperaturesHourly(data, feels_like =0):
         """
-        It takes in a list of dictionaries and returns a list of temperatures and a list of feels_like
-        temperatures
+        It takes in a list of dictionaries and returns a list of temperatures or feels_like temperatures
         
-        :param data: The data returned from the API call
-        :param feels_like: if set to 1, it will return the feels_like temperatures as well, defaults to
-        0 (optional)
-        :return: A list of temperatures and a list of feels_like temperatures
+        :param data: This is the data that is returned from the API
+        :param feels_like: if set to 1, returns the feels_like temperatures, else returns the actual
+        temperatures, defaults to 0 (optional)
+        :return: a list of temperatures or feels_like temperatures.
         """
         if not isinstance(data,list):
             raise TypeError(f"Data type not acceptable: expected <class 'list'>, <{type(data)}> found")
         temperatures = []
         feels_like = []
 
-        for temp in data["temp"]:
-            temperatures.append(temp)
-
+    
         if feels_like:
             for feels in data["feels_like"]:
                 feels_like.append(feels)
-            return temperatures,feels_like
-        
+            return feels_like
         else:
+            for temp in data["temp"]:
+                temperatures.append(temp)
             return temperatures
 
     @staticmethod
-        
     def returnTemperaturesDaily(data, morn=1, day=0, eve=0, night=0, minn=0, maxx=0, feels=0):
         """
-        It takes a list of dictionaries, each dictionary containing a temperature key with a dictionary
-        of temperatures for the day, and returns a dictionary of lists of temperatures for the day, with
-        the keys being the time of day
+        It takes a list of dictionaries, each dictionary containing a 'temp' key and a 'feels_like' key,
+        and returns a dictionary of lists, each list containing the temperatures for a given time of day
         
-        :param data: list of dictionaries, each dictionary contains the weather data for a day
+        :param data: the data you want to extract the temperatures from
         :param morn: morning temperature, defaults to 1 (optional)
-        :param day: day temperature, defaults to 0 (optional)
+        :param day: day temperature, as a string, defaults to 0 (optional)
         :param eve: evening temperature, defaults to 0 (optional)
-        :param night: The minimum temperature at night time. This is the lowest temperature that is
-        forecasted to occur between sunset and sunrise the next day, defaults to 0 (optional)
+        :param night: Night temperature. This is minimum temperature (usually happens around midnight),
+        defaults to 0 (optional)
         :param minn: minimum temperature, defaults to 0 (optional)
         :param maxx: returns the maximum temperature of the day, defaults to 0 (optional)
-        :param feels_like: if you want to return the feels_like temperatures, defaults to 0 (optional)
-        :return: A dictionary with the temperatures for the day, night, morning, evening, min and max.
+        :param feels: if True, returns the feels like temperatures, else returns the actual
+        temperatures, defaults to 0 (optional)
+        :return: A dictionary with the temperatures for each day.
         """
+       
         if not isinstance(data,list):
             raise TypeError(f"Data type not acceptable: expected <class 'list'>, <{type(data)}> found")
         temperatures={  "morn":[],
@@ -102,22 +100,16 @@ class DataManager():
         for daytime in data:
             if feels:
                 if morn:
-                    temperatures["morn"].append(daytime['temp']["morn"])
                     feels_like["morn"].append(daytime['feels_like']["morn"])
                 if day:
-                    temperatures['day'].append(daytime['temp']['day'])
                     feels_like["day"].append(daytime['feels_like']["day"])
                 if eve:
-                    temperatures['eve'].append(daytime['temp']['eve'])
                     feels_like["eve"].append(daytime['feels_like']["eve"])
                 if night:
-                    temperatures['night'].append(daytime['temp']['night'])
                     feels_like["night"].append(daytime['feels_like']["night"])
                 if minn:
-                    temperatures['min'].append(daytime['temp']['min'])
-                    feels_like["min"].append(daytime['feels_like']["mminorn"])
+                    feels_like["min"].append(daytime['feels_like']["min"])
                 if maxx:
-                    temperatures['max'].append(daytime['temp']['max'])
                     feels_like["max"].append(daytime['feels_like']["max"])
             else:
                 if morn:
@@ -134,16 +126,23 @@ class DataManager():
                     temperatures['max'].append(daytime['temp']['max'])
 
         keysToRemove = []
-        for key in temperatures.keys():
-            if len(temperatures[key]) == 0:
-                keysToRemove.append(key)
+        if feels:
+            for key in feels_like.keys():
+                if len(feels_like[key]) == 0:
+                    keysToRemove.append(key)
+        else:
+            for key in temperatures.keys():
+                if len(temperatures[key]) == 0:
+                    keysToRemove.append(key)
+                    
         for key in keysToRemove: 
-            del temperatures[key]
             if feels:
                 del feels_like[key]
+            else:
+                del temperatures[key]
 
         if feels:
-            return temperatures, feels_like
+            return feels_like
         else:
             return temperatures
 

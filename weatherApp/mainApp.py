@@ -12,6 +12,7 @@ import keys
 import string
 import resources
 from matplotlib import pyplot as plt
+from plotWindow import Ui_MainWindow
 API_KEY = keys.API_KEY
 
 
@@ -91,17 +92,49 @@ class WeatherApp(qtw.QWidget):
         return qtg.QPixmap(":/icons/icons/"+icons[icon].strip())
 
     def sevenDayPlot(self):
-        plt.figure(1)
-        data = self.WeatherCaller.getDailyData(self.cityName)
-        temps = DataManager.returnTemperaturesDaily(data,morn=1, day=1,eve=1, night=1)
-        days = DataManager.returnTimestamps(data, 'day')
-        plt.plot(days,temps['morn'],days,temps['day'],days,temps['eve'],days,temps['night'],lw=2)
+        self.plotWindow = qtw.QMainWindow()
+        self.windowGUI = Ui_MainWindow()
+        self.windowGUI.setupUi(self.plotWindow)
+        
+        plotMap = {"Temperature":"temp", "Feels-Like": "feels_like", "Pressure": "pressure", "Humidity": "humidity", \
+            "Atmospheric Temperature":"dew_point", "Wind speed": "wind_speed", "Cloudiness":"clouds", \
+                "UV":"uvi" , "Precipitation":"pop"}
+        self.checkBoxes = [self.windowGUI.mornBox,self.windowGUI.dayBox,self.windowGUI.eveBox,\
+            self.windowGUI.nightBox,self.windowGUI.minBox,self.windowGUI.maxBox]
+        self.windowGUI.comboBox.addItems(list(plotMap.keys()))
+        self.windowGUI.comboBox.currentIndexChanged.connect(self.hideComboBoxes)
+        self.windowGUI.plotButton.clicked.connect(lambda :self.plotGraph(plotMap[self.windowGUI.comboBox.currentText()]))
+        self.plotWindow.show()
+        
+    def hideComboBoxes(self):
+        if self.windowGUI.comboBox.currentText() == "Temperature" or self.windowGUI.comboBox.currentText() =="Feels-Like":
+            for box in self.checkBoxes:
+                box.setVisible(True)
+        else:
+            for box in self.checkBoxes:
+                box.setVisible(False)
 
-        plt.fill_between(days,temps['morn'],alpha=0.2)
-        plt.fill_between(days,temps['day'],alpha=0.2)
-        plt.fill_between(days,temps['eve'],alpha=0.2)
-        plt.fill_between(days,temps['night'],alpha=0.2)
-        plt.xticks(rotation=15)
+
+    def plotGraph(self, value):
+        data = self.WeatherCaller.getDailyData(self.cityName)
+        timeAxis = DataManager.returnTimestamps(data,"day")
+
+        if value == "temp" or value == "feels_like":
+            boxValues =[]
+            for box in self.checkBoxes:
+                boxValues.append(box.isChecked()) 
+            
+            morn,day,eve,night,minn,maxx = tuple(boxValues)
+            if value == "temp":
+                feels = 0
+            if value =="feels_like":
+                feels = 1 
+            tempDict = DataManager.returnTemperaturesDaily(data,morn,day,eve,night,minn,maxx, feels)
+            for key in tempDict.keys():
+                plt.plot(timeAxis,tempDict[key])
+        else:
+            plotValues = DataManager.returnData(data,value)
+            plt.plot(timeAxis, plotValues)
         plt.show()
 
     def goBack(self):
