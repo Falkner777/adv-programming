@@ -61,7 +61,7 @@ class Ui_MainWindow(object):
         self.mornBox.setGeometry(QtCore.QRect(20, 89, 89, 24))
         self.mornBox.setStyleSheet("font-family: \'Roboto\';\n"
 "font-style: normal;\n"
-"font-weight: 400;\n"
+"font-weight: 500;\n"
 "font-size: 16px;\n"
 "line-height: 21px;\n"
 "letter-spacing: 0.04em;\n"
@@ -72,7 +72,7 @@ class Ui_MainWindow(object):
         self.dayBox.setGeometry(QtCore.QRect(115, 89, 98, 24))
         self.dayBox.setStyleSheet("font-family: \'Roboto\';\n"
 "font-style: normal;\n"
-"font-weight: 400;\n"
+"font-weight: 500;\n"
 "font-size: 16px;\n"
 "line-height: 21px;\n"
 "letter-spacing: 0.04em;\n"
@@ -83,7 +83,7 @@ class Ui_MainWindow(object):
         self.maxBox.setGeometry(QtCore.QRect(219, 120, 102, 24))
         self.maxBox.setStyleSheet("font-family: \'Roboto\';\n"
 "font-style: normal;\n"
-"font-weight: 400;\n"
+"font-weight: 500;\n"
 "font-size: 16px;\n"
 "line-height: 21px;\n"
 "letter-spacing: 0.04em;\n"
@@ -94,7 +94,7 @@ class Ui_MainWindow(object):
         self.minBox.setGeometry(QtCore.QRect(115, 120, 98, 24))
         self.minBox.setStyleSheet("font-family: \'Roboto\';\n"
 "font-style: normal;\n"
-"font-weight: 400;\n"
+"font-weight: 500;\n"
 "font-size: 16px;\n"
 "line-height: 21px;\n"
 "letter-spacing: 0.04em;\n"
@@ -105,7 +105,7 @@ class Ui_MainWindow(object):
         self.eveBox.setGeometry(QtCore.QRect(219, 89, 102, 24))
         self.eveBox.setStyleSheet("font-family: \'Roboto\';\n"
 "font-style: normal;\n"
-"font-weight: 400;\n"
+"font-weight: 500;\n"
 "font-size: 16px;\n"
 "line-height: 21px;\n"
 "letter-spacing: 0.04em;\n"
@@ -117,7 +117,7 @@ class Ui_MainWindow(object):
         self.nightBox.setGeometry(QtCore.QRect(20, 120, 89, 24))
         self.nightBox.setStyleSheet("font-family: \'Roboto\';\n"
 "font-style: normal;\n"
-"font-weight: 400;\n"
+"font-weight: 500;\n"
 "font-size: 16px;\n"
 "line-height: 21px;\n"
 "letter-spacing: 0.04em;\n"

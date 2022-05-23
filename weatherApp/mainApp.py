@@ -1,9 +1,10 @@
 
 from datetime import datetime
-from re import S
+
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
+
 from badRequest import BadRequest
 from dataManager import DataManager
 from weatherController import WeatherController
@@ -12,7 +13,8 @@ import keys
 import string
 import resources
 from matplotlib import pyplot as plt
-from plotWindow import Ui_MainWindow
+from plotWindow import Ui_MainWindow as PlotGuiDaily
+from plotWindowHourly import Ui_MainWindow as PlotGuiHourly
 API_KEY = keys.API_KEY
 
 
@@ -29,10 +31,12 @@ class WeatherApp(qtw.QWidget):
         self.GUI.stackedWidget.setCurrentIndex(0)
 
         self.GUI.searchButton.clicked.connect(self.search)
+
         self.GUI.goBackButton.clicked.connect(self.goBack)
         self.GUI.sevenDaysButton.clicked.connect(self.sevenDayPlot)
-        
+        self.GUI.hourlyButton.clicked.connect(self.hourlyPlot)
         self.show()
+
 
     def search(self):
         """
@@ -93,7 +97,7 @@ class WeatherApp(qtw.QWidget):
 
     def sevenDayPlot(self):
         self.plotWindow = qtw.QMainWindow()
-        self.windowGUI = Ui_MainWindow()
+        self.windowGUI = PlotGuiDaily()
         self.windowGUI.setupUi(self.plotWindow)
         
         plotMap = {"Temperature":"temp", "Feels-Like": "feels_like", "Pressure": "pressure", "Humidity": "humidity", \
@@ -103,7 +107,7 @@ class WeatherApp(qtw.QWidget):
             self.windowGUI.nightBox,self.windowGUI.minBox,self.windowGUI.maxBox]
         self.windowGUI.comboBox.addItems(list(plotMap.keys()))
         self.windowGUI.comboBox.currentIndexChanged.connect(self.hideComboBoxes)
-        self.windowGUI.plotButton.clicked.connect(lambda :self.plotGraph(plotMap[self.windowGUI.comboBox.currentText()]))
+        self.windowGUI.plotButton.clicked.connect(lambda :self.plotGraphDaily(plotMap[self.windowGUI.comboBox.currentText()]))
         self.plotWindow.show()
         
     def hideComboBoxes(self):
@@ -114,9 +118,39 @@ class WeatherApp(qtw.QWidget):
             for box in self.checkBoxes:
                 box.setVisible(False)
 
+    def hourlyPlot(self):
+        self.plotWindowHourly = qtw.QMainWindow()
+        self.windowGUIHourly = PlotGuiHourly()
+        self.windowGUIHourly.setupUi(self.plotWindowHourly)
+        
+        plotMap = {"Temperature":"temp", "Feels-Like": "feels_like", "Pressure": "pressure", "Humidity": "humidity", \
+            "Atmospheric Temperature":"dew_point", "Wind speed": "wind_speed", "Cloudiness":"clouds", \
+                "UV":"uvi" , "Precipitation":"pop"}
+        self.windowGUIHourly.comboBox.addItems(list(plotMap.keys()))
+        key = self.windowGUIHourly.comboBox.currentText()
+        value = plotMap[key]
 
-    def plotGraph(self, value):
+        self.windowGUIHourly.plotButton.clicked.connect(lambda: self.plotGraphHourly(value))
+        self.plotWindowHourly.show()
+
+    def plotGraphHourly(self, value):
+        data = self.WeatherCaller.getHourlyData(self.cityName)
+        plotUnits = {"temp":'Temperature(°C)', "feels_like": 'Temperature(°C)', "pressure":"Pressure (hPa)", "wind_speed":"Wind speed(m/s)",\
+            "dew_point": "Temperature(°C)", "uvi":"UV Index", "clouds": "Cloudiness(%)", "pop":"Probability of precipitation","humidity": "Humidity (%)"}
+        timeAxis = DataManager.returnTimestamps(data,"hour")
+        plotValues = DataManager.returnData(data,value)
+        plt.figure(facecolor="#C2C4FA",figsize=(10,6))
+        plt.plot(timeAxis, plotValues,color="#484DD5")
+        plt.title("24 Hour Forecast",fontweight='bold',fontfamily="Roboto")
+        plt.xticks(rotation = 22, ha='right')
+        plt.ylabel(plotUnits[value],fontfamily="Roboto")
+        plt.xlabel("",fontfamily="Roboto")
+        plt.show()
+
+    def plotGraphDaily(self, value):
         data = self.WeatherCaller.getDailyData(self.cityName)
+        plotUnits = {"temp":'Temperature(°C)', "feels_like": 'Temperature(°C)', "pressure":"Pressure (hPa)", "wind_speed":"Wind speed(m/s)",\
+            "dew_point": "Temperature(°C)", "uvi":"UV Index", "clouds": "Cloudiness(%)", "pop":"Probability of precipitation","humidity": "Humidity (%)"}
         timeAxis = DataManager.returnTimestamps(data,"day")
 
         if value == "temp" or value == "feels_like":
@@ -130,11 +164,25 @@ class WeatherApp(qtw.QWidget):
             if value =="feels_like":
                 feels = 1 
             tempDict = DataManager.returnTemperaturesDaily(data,morn,day,eve,night,minn,maxx, feels)
+            plt.figure(facecolor="#C2C4FA")
             for key in tempDict.keys():
                 plt.plot(timeAxis,tempDict[key])
+            plt.legend(tempDict.keys())
+            plt.title("Seven Day Forecast",fontweight='bold',fontfamily="Roboto")
+            plt.xticks(rotation = 15, ha='right')
+            plt.ylabel(plotUnits[value],fontfamily="Roboto")
+            plt.xlabel("",fontfamily="Roboto")
+            
         else:
+
+        
             plotValues = DataManager.returnData(data,value)
-            plt.plot(timeAxis, plotValues)
+            plt.figure(facecolor="#C2C4FA")
+            plt.plot(timeAxis, plotValues,color="#484DD5")
+            plt.title("Seven Day Forecast",fontweight='bold',fontfamily="Roboto")
+            plt.xticks(rotation = 15, ha='right')
+            plt.ylabel(plotUnits[value],fontfamily="Roboto")
+            plt.xlabel("",fontfamily="Roboto")
         plt.show()
 
     def goBack(self):

@@ -21,7 +21,7 @@ class DataManager():
         timeString = ''
         match typeTime:
             case 'hour':
-                timeString = "%I %M %p"
+                timeString = "%I:%M%p"
             case 'day':
                 timeString = "%a %d %b"
             case _:
