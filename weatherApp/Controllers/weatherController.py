@@ -28,6 +28,8 @@ class WeatherController:
         return self.language
     
     def getWeatherCity(self, CityName):
+        if not isinstance(CityName,str):
+            raise TypeError(f"CityName must be of <class 'str'> , {type(CityName)} given")
         apiCALL = self.getDefaultCall() + \
             f"weather?q={CityName}&" + \
                 f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__getAPIKEY()}"    
@@ -45,7 +47,9 @@ class WeatherController:
         :param address: The address of the city you want to get the weather for
         :return: A list of dictionaries.
         """
-        
+        if not isinstance(address,str):
+            raise TypeError(f"address must be of <class 'str'> , {type(address)} given")
+
         lon, lat = self.coordsConverter.getCityLonLat(address)
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \
@@ -66,7 +70,8 @@ class WeatherController:
         :param address: The address of the city you want to get the weather for
         :return: A list of dictionaries.
         """
-        
+        if not isinstance(address,str):
+            raise TypeError(f"address must be of <class 'str'> , {type(address)} given")
         lon, lat = self.coordsConverter.getCityLonLat(address)
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \
