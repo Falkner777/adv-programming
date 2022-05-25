@@ -1,7 +1,7 @@
 import argparse
 import sys
 import keys
-from weatherController import WeatherController
+from Controllers.weatherController import WeatherController
 from dataManager import DataManager
 units = "metric"
 API_KEY = keys.API_KEY

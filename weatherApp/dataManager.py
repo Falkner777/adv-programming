@@ -2,7 +2,7 @@ from cmath import e
 import datetime
 from sre_constants import RANGE_UNI_IGNORE
 
-from emptyRequestException import EmptyRequestException 
+from Exceptions.emptyRequestException import EmptyRequestException 
 class DataManager():
 
     def __init__(self):

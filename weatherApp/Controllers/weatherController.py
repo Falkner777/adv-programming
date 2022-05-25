@@ -1,9 +1,9 @@
 from audioop import add
 import json
-from badRequest import BadRequest
+from Exceptions.badRequest import BadRequest
 import requests
 
-from coordController import CoordController
+from Controllers.coordController import CoordController
 
 
 class WeatherController:

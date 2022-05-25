@@ -1,7 +1,7 @@
 import json
 import requests
-from badRequest import BadRequest
-from emptyRequestException import EmptyRequestException
+from Exceptions.badRequest import BadRequest
+from Exceptions.emptyRequestException import EmptyRequestException
 import keys
 
 

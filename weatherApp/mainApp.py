@@ -6,16 +6,16 @@ import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
 import numpy as np
-from badRequest import BadRequest
+from Exceptions.badRequest import BadRequest
 from dataManager import DataManager
-from weatherController import WeatherController
-import weatherGUI
+from Controllers.weatherController import WeatherController
+import GUISnResources.weatherGUI as weatherGUI
 import keys
 import string
 
 from matplotlib import pyplot as plt
-from plotWindow import Ui_MainWindow as PlotGuiDaily
-from plotWindowHourly import Ui_MainWindow as PlotGuiHourly
+from GUISnResources.plotWindow import Ui_MainWindow as PlotGuiDaily
+from GUISnResources.plotWindowHourly import Ui_MainWindow as PlotGuiHourly
 API_KEY = keys.API_KEY
 
 

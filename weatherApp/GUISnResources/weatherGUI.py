@@ -447,4 +447,4 @@ class Ui_Form(object):
         self.weatherDescription.setText(_translate("Form", "Light Drizzle"))
         self.feelsLikeLabel.setText(_translate("Form", "Feels-Like:"))
         self.hourlyButton.setText(_translate("Form", "Hourly"))
-import resources
+import GUISnResources.resources as resources
