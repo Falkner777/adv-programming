@@ -1,17 +1,18 @@
 
 from datetime import datetime
+from sqlite3 import Timestamp
 
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
-
+import numpy as np
 from badRequest import BadRequest
 from dataManager import DataManager
 from weatherController import WeatherController
 import weatherGUI
 import keys
 import string
-import resources
+
 from matplotlib import pyplot as plt
 from plotWindow import Ui_MainWindow as PlotGuiDaily
 from plotWindowHourly import Ui_MainWindow as PlotGuiHourly
@@ -127,10 +128,9 @@ class WeatherApp(qtw.QWidget):
             "Atmospheric Temperature":"dew_point", "Wind speed": "wind_speed", "Cloudiness":"clouds", \
                 "UV":"uvi" , "Precipitation":"pop"}
         self.windowGUIHourly.comboBox.addItems(list(plotMap.keys()))
-        key = self.windowGUIHourly.comboBox.currentText()
-        value = plotMap[key]
+    
 
-        self.windowGUIHourly.plotButton.clicked.connect(lambda: self.plotGraphHourly(value))
+        self.windowGUIHourly.plotButton.clicked.connect(lambda: self.plotGraphHourly(plotMap[self.windowGUIHourly.comboBox.currentText()]))
         self.plotWindowHourly.show()
 
     def plotGraphHourly(self, value):
@@ -141,9 +141,12 @@ class WeatherApp(qtw.QWidget):
         plotValues = DataManager.returnData(data,value)
         plt.figure(facecolor="#C2C4FA",figsize=(10,6))
         plt.plot(timeAxis, plotValues,color="#484DD5")
-        plt.title("24 Hour Forecast",fontweight='bold',fontfamily="Roboto")
-        plt.xticks(rotation = 22, ha='right')
-        plt.ylabel(plotUnits[value],fontfamily="Roboto")
+        plt.plot(timeAxis, plotValues,color="#484DD5",marker=".")
+        plt.title("24 Hour Forecast",fontweight='bold',fontfamily="Roboto",fontsize=18)
+        ticks = [timeAxis[x*4] for x in range(len(timeAxis)//4)]
+        ticks.append(timeAxis[-1])
+        plt.xticks(ticks)
+        plt.ylabel(plotUnits[value],fontfamily="Roboto",fontsize=16)
         plt.xlabel("",fontfamily="Roboto")
         plt.show()
 
@@ -162,15 +165,25 @@ class WeatherApp(qtw.QWidget):
             if value == "temp":
                 feels = 0
             if value =="feels_like":
-                feels = 1 
-            tempDict = DataManager.returnTemperaturesDaily(data,morn,day,eve,night,minn,maxx, feels)
+                feels = 1
+
+            try:
+                tempDict = DataManager.returnTemperaturesDaily(data,morn,day,eve,night,minn,maxx, feels)
+            except Exception as e:
+                errorDdialog = qtw.QMessageBox()
+                errorDdialog.setWindowTitle("Error on search!")
+                errorDdialog.setIcon(qtw.QMessageBox.Critical)
+                errorDdialog.setText(e.__str__())
+                errorDdialog.exec_()
+                return
+
             plt.figure(facecolor="#C2C4FA")
             for key in tempDict.keys():
                 plt.plot(timeAxis,tempDict[key])
             plt.legend(tempDict.keys())
-            plt.title("Seven Day Forecast",fontweight='bold',fontfamily="Roboto")
+            plt.title("Seven Day Forecast",fontweight='bold',fontfamily="Roboto",fontsize=18)
             plt.xticks(rotation = 15, ha='right')
-            plt.ylabel(plotUnits[value],fontfamily="Roboto")
+            plt.ylabel(plotUnits[value],fontfamily="Roboto",fontsize=16)
             plt.xlabel("",fontfamily="Roboto")
             
         else:
@@ -179,9 +192,9 @@ class WeatherApp(qtw.QWidget):
             plotValues = DataManager.returnData(data,value)
             plt.figure(facecolor="#C2C4FA")
             plt.plot(timeAxis, plotValues,color="#484DD5")
-            plt.title("Seven Day Forecast",fontweight='bold',fontfamily="Roboto")
+            plt.title("Seven Day Forecast",fontweight='bold',fontfamily="Roboto",fontsize=18)
             plt.xticks(rotation = 15, ha='right')
-            plt.ylabel(plotUnits[value],fontfamily="Roboto")
+            plt.ylabel(plotUnits[value],fontfamily="Roboto",fontsize=16)
             plt.xlabel("",fontfamily="Roboto")
         plt.show()
 
