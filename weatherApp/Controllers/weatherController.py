@@ -9,14 +9,21 @@ from Controllers.coordController import CoordController
 class WeatherController:
 
     def __init__(self, api_key, units, language=None):
-        self._API_KEY = api_key
+        self.__API_KEY = api_key
         self.defaultCall = "https://api.openweathermap.org/data/2.5/"
         self.units = units
         self.language = language
-        self.coordsConverter = CoordController()
+        self.coordsConverter = CoordController(api_key)
 
-    def __getAPIKEY(self):
-        return self._API_KEY
+    @property
+    def __APIKEY(self):
+        return self.__API_KEY
+
+    @__APIKEY.setter
+    def __APIKEY(self, key):
+        if not isinstance(key,str):
+            raise TypeError(f"key must be of <class 'str'> , {type(key)} given")
+        self.__API_KEY = key
 
     def getDefaultCall(self):
         return self.defaultCall
@@ -32,7 +39,7 @@ class WeatherController:
             raise TypeError(f"CityName must be of <class 'str'> , {type(CityName)} given")
         apiCALL = self.getDefaultCall() + \
             f"weather?q={CityName}&" + \
-                f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__getAPIKEY()}"    
+                f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__APIKEY}"    
         data = requests.get(apiCALL)
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)
@@ -53,7 +60,7 @@ class WeatherController:
         lon, lat = self.coordsConverter.getCityLonLat(address)
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \
-                f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
+                f"exclude=current,minutely,daily,alerts&units={self.getUnits()}&appid={self.__APIKEY}"
         
         data = requests.get(apiCALL)
         if data.status_code in range(400,600):
@@ -75,7 +82,7 @@ class WeatherController:
         lon, lat = self.coordsConverter.getCityLonLat(address)
         apiCALL = self.getDefaultCall() + \
             f"onecall?lat={lat}&lon={lon}&" + \
-                f"exclude=current,minutely,hourly,alerts&units={self.getUnits()}&appid={self.__getAPIKEY()}"
+                f"exclude=current,minutely,hourly,alerts&units={self.getUnits()}&appid={self.__APIKEY}"
         
         data = requests.get(apiCALL)
         if data.status_code in range(400,600):
