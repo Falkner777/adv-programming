@@ -1,6 +1,7 @@
 from audioop import add
 import json
 from Exceptions.badRequest import BadRequest
+from Exceptions.noConnection import ConnectionChecker as netChecker
 import requests
 
 from Controllers.coordController import CoordController

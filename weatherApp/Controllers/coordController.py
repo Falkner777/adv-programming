@@ -41,7 +41,6 @@ class CoordController():
 
         if len(dataJson) == 0:
             raise EmptyRequestException()
-
         dataJson = dataJson[0]
 
         return dataJson["lon"], dataJson["lat"] 
