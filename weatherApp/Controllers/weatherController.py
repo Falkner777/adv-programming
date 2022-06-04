@@ -41,6 +41,8 @@ class WeatherController:
         apiCALL = self.getDefaultCall() + \
             f"weather?q={CityName}&" + \
                 f"exclude=minutely,daily,alerts,hourly&units={self.getUnits()}&appid={self.__APIKEY}"    
+        
+        netChecker.checkConnection()
         data = requests.get(apiCALL)
         if data.status_code in range(400,600):
             raise BadRequest(data.status_code)

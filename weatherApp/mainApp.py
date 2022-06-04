@@ -9,6 +9,7 @@ import numpy as np
 from Exceptions.badRequest import BadRequest
 from dataManager import DataManager
 from Controllers.weatherController import WeatherController
+from Controllers.mapController import MapController
 import GUISnResources.weatherGUI as weatherGUI
 from GUISnResources.messageBox import MessageBox
 import keys
@@ -17,9 +18,12 @@ from Exceptions.noConnection import ConnectionChecker as conChecker
 from matplotlib import pyplot as plt
 from GUISnResources.plotWindow import Ui_MainWindow as PlotGuiDaily
 from GUISnResources.plotWindowHourly import Ui_MainWindow as PlotGuiHourly
+from GUISnResources.mapPlotGUI import Ui_MainWindow as MapPlotGui
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+import sys
 API_KEY = keys.API_KEY
 
-
+sys.argv.append("--disable-web-security")
 class WeatherApp(qtw.QWidget):
 
     def __init__(self):
@@ -31,10 +35,11 @@ class WeatherApp(qtw.QWidget):
         self.GUI.stackedWidget.setCurrentIndex(0)
 
         self.GUI.searchButton.clicked.connect(self.search)
-
+        self.mapControl = MapController(API_KEY)
         self.GUI.goBackButton.clicked.connect(self.goBack)
         self.GUI.sevenDaysButton.clicked.connect(self.sevenDayPlot)
         self.GUI.hourlyButton.clicked.connect(self.hourlyPlot)
+        self.GUI.mapsButton.clicked.connect(self.mapPlot)
         self.show()
 
     def search(self):
@@ -211,6 +216,30 @@ class WeatherApp(qtw.QWidget):
             plt.ylabel(plotUnits[value], fontfamily="Roboto", fontsize=16)
             plt.xlabel("", fontfamily="Roboto")
         plt.show()
+
+    def mapPlot(self):
+        mapLayers = {"Convective precipitation":"PAC0","Precipitation intensity":"PR0","Accumulated precipitation":"PA0",\
+            "Accumulated precipitation - rain":"PAR0","Accumulated precipitation - snow":"PAS0","Depth of snow":"SD0",\
+                "Wind speed at an altitude of 10 meters":"WS10","Joint display of speed wind  and  direction":"WND"\
+                    ,"Atmospheric pressure on mean sea level":"APM","Air temperature at a height of 2 meters":"TA2",\
+                        "Temperature of a dew point":"TD2","Soil temperature 0-10":"TS0","Soil temperature >10":"TS10",\
+                            "Relative humidity":"HRD0","Cloudiness":"CL"}
+
+        self.mapLayerWindow = qtw.QMainWindow()
+        self.mapWindowGui = MapPlotGui()
+        self.mapWindowGui.setupUi(self.mapLayerWindow)
+        self.mapWindowGui.comboBox.addItems(list(mapLayers.keys()))
+        self.mapWindowGui.pushButton.clicked.connect(lambda:self.showMap(mapLayers[self.mapWindowGui.comboBox.currentText()]))
+        self.mapLayerWindow.show()
+
+    def showMap(self,layer):
+
+        self.mapControl.setMap(self.cityName,layer)
+        self.mapWindow = QWebEngineView()
+        self.mapWindow.load(qtc.QUrl.fromLocalFile("/home/dimitris/adv_programming/adv-programming/weatherApp/Controllers/map.html"))
+        self.mapWindow.show()
+
+        
 
     def goBack(self):
         self.GUI.stackedWidget.setCurrentIndex(0)

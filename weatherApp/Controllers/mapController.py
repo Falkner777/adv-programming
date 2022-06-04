@@ -1,12 +1,14 @@
 import os,sys
+from turtle import position
 currentDir = os.path.dirname(os.path.realpath(__file__))
 parentDir = os.path.dirname(currentDir)
 sys.path.append(parentDir)
-from weatherController import WeatherController
-from coordController import CoordController
+
+from Controllers.coordController import CoordController
 import keys
 import requests
 import folium
+import folium.plugins as plugins
 from PIL import Image
 import io
 from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -24,7 +26,7 @@ class MapController():
         self.__API_KEY = api_key
         self.defaultCall = "http://maps.openweathermap.org/maps/2.0/weather/"
         self.coordController = CoordController(api_key)
-        self.zoomLevel = 4
+        self.zoomLevel = 5
     
     @property
     def __APIKEY(self):
@@ -83,8 +85,18 @@ class MapController():
         zoom_start=10, parse_html=True)
         img_overlay = folium.raster_layers.ImageOverlay(name="map", image = imagePath,bounds=[[lat_min,lon_min],[lat_max,lon_max]])
         img_overlay.add_to(weathermap)
+
+        layers = ["Open Street Map","Stamen Terrain", "Stamen Toner", "Stamen Watercolor", "CartoDB Positron", "CartoDB Dark_Matter"]
+        for layer in layers:
+            folium.raster_layers.TileLayer(layer).add_to(weathermap)
+
+        folium.LayerControl().add_to(weathermap)
+        minimap = plugins.MiniMap(toggle_display=True)
+        weathermap.add_child(minimap)
+
+
+        folium.Marker([lat,lon],popup=cityName,tooltip='Open').add_to(weathermap)
+
         weathermap.save("./Controllers/map.html")
 
 
-test = MapController(keys.API_KEY)
-test.setMap("Lefkada","CL")
