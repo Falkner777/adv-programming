@@ -1,6 +1,9 @@
-from cmath import e
+import sys,os
 import datetime
-from sre_constants import RANGE_UNI_IGNORE
+
+path = os.getcwd()
+parentPath = os.path.dirname(path) + "/weatherApp"
+sys.path.insert(0,parentPath)
 
 from Exceptions.emptyRequestException import EmptyRequestException 
 class DataManager():

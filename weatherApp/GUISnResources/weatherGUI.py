@@ -33,7 +33,6 @@ class Ui_Form(object):
 "\n"
 "color: #FFFFFF;\n"
 "background-color: transparent;\n"
-"text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);\n"
 "")
         self.titleLabel.setObjectName("titleLabel")
         self.searchButton = QtWidgets.QPushButton(self.Search)
@@ -351,7 +350,7 @@ class Ui_Form(object):
 "\n"
 "color: #FFFFFF;\n"
 "background-color: transparent;\n"
-"text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);\n"
+
 "")
         self.cityLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.cityLabel.setObjectName("cityLabel")

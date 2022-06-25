@@ -1,9 +1,8 @@
-import os,sys
-from turtle import position
-currentDir = os.path.dirname(os.path.realpath(__file__))
-parentDir = os.path.dirname(currentDir)
-sys.path.append(parentDir)
 
+import os,sys
+path = os.getcwd()
+parentPath = os.path.dirname(path) + "/weatherApp"
+sys.path.insert(0,parentPath)
 from Controllers.coordController import CoordController
 import keys
 import requests
@@ -11,9 +10,7 @@ import folium
 import folium.plugins as plugins
 from PIL import Image
 import io
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtCore as qtc
+
 import sys
 from pyowm.utils.geo import Point
 from pyowm.commons.tile import Tile,Image as IMAGE
@@ -26,7 +23,7 @@ class MapController():
         self.__API_KEY = api_key
         self.defaultCall = "http://maps.openweathermap.org/maps/2.0/weather/"
         self.coordController = CoordController(api_key)
-        self.zoomLevel = 5
+        self.zoomLevel = 6
     
     @property
     def __APIKEY(self):
@@ -47,6 +44,18 @@ class MapController():
         return self.zoomLevel
     
     def setMap(self,cityName, layerName):
+        """
+        It takes a city name and a layer name as input, gets the coordinates of the city, gets the tile
+        coordinates of the city, makes a call to the API, gets the image data, saves the image data as a
+        png file, loads the png file, creates a tile object, gets the bounding polygon of the tile, gets
+        the coordinates of the bounding polygon, gets the minimum and maximum longitude and latitude,
+        creates a folium map, creates an image overlay, adds the image overlay to the map, adds the tile
+        layers to the map, adds the layer control to the map, adds the minimap to the map, adds a marker
+        to the map, and saves the map as an html file
+        
+        :param cityName: The name of the city you want to get the map for
+        :param layerName: The name of the map layer you want to use
+        """
         
         if not isinstance(cityName,str):
             raise TypeError(f"cityName must be of <class 'str'> , {type(cityName)} given")

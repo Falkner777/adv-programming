@@ -1,9 +1,9 @@
 
 import unittest
 import os,sys
-currentDir = os.path.dirname(os.path.realpath(__file__))
-parentDir = os.path.dirname(currentDir)
-sys.path.append(parentDir)
+path = os.getcwd()
+parentPath = os.path.dirname(path) + "/weatherApp"
+sys.path.insert(0,parentPath)
 from Controllers.weatherController import WeatherController
 from Exceptions.badRequest import BadRequest
 from Exceptions.emptyRequestException import EmptyRequestException

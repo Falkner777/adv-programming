@@ -1,6 +1,9 @@
+import sys,os
 
-from datetime import datetime
-from sqlite3 import Timestamp
+
+path = os.getcwd()
+parentPath = os.path.dirname(path) + "/weatherApp"
+sys.path.insert(0,parentPath)
 
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
@@ -23,7 +26,7 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 import sys
 API_KEY = keys.API_KEY
 
-sys.argv.append("--disable-web-security")
+
 class WeatherApp(qtw.QWidget):
 
     def __init__(self):
@@ -191,7 +194,7 @@ class WeatherApp(qtw.QWidget):
                 tempDict = DataManager.returnTemperaturesDaily(
                     data, morn, day, eve, night, minn, maxx, feels)
             except Exception as e:
-                popMessage = MessageBox(e.__str__, "Error fetching data")
+                popMessage = MessageBox(e.__str__(), "Error fetching data")
                 popMessage.createMessage()
                 return
 
@@ -233,7 +236,7 @@ class WeatherApp(qtw.QWidget):
         self.mapLayerWindow.show()
 
     def showMap(self,layer):
-
+        pass
         self.mapControl.setMap(self.cityName,layer)
         self.mapWindow = QWebEngineView()
         self.mapWindow.load(qtc.QUrl.fromLocalFile("/home/dimitris/adv_programming/adv-programming/weatherApp/Controllers/map.html"))
