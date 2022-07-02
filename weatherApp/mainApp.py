@@ -112,6 +112,9 @@ class WeatherApp(qtw.QWidget):
         return qtg.QPixmap(":/icons/icons/"+icons[icon].strip())
 
     def sevenDayPlot(self):
+        """
+        It creates a new window with a combo box and a plot button.
+        """
         self.plotWindow = qtw.QMainWindow()
         self.windowGUI = PlotGuiDaily()
         self.windowGUI.setupUi(self.plotWindow)
@@ -129,6 +132,10 @@ class WeatherApp(qtw.QWidget):
         self.plotWindow.show()
 
     def hideComboBoxes(self):
+        """
+        If the user selects "Temperature" or "Feels-Like" from the drop-down menu, then the checkboxes
+        will be visible. Otherwise, they will be hidden
+        """
         if self.windowGUI.comboBox.currentText() == "Temperature" or self.windowGUI.comboBox.currentText() == "Feels-Like":
             for box in self.checkBoxes:
                 box.setVisible(True)
@@ -236,7 +243,7 @@ class WeatherApp(qtw.QWidget):
         self.mapLayerWindow.show()
 
     def showMap(self,layer):
-        pass
+        
         self.mapControl.setMap(self.cityName,layer)
         self.mapWindow = QWebEngineView()
         self.mapWindow.load(qtc.QUrl.fromLocalFile("/home/dimitris/adv_programming/adv-programming/weatherApp/Controllers/map.html"))

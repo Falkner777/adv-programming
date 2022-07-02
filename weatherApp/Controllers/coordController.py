@@ -28,7 +28,6 @@ class CoordController():
     def getDefaultCall(self):
         return self.defaultCall
         
-    
     def getCityLonLat(self, cityName):
 
         if not isinstance(cityName,str):

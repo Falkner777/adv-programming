@@ -92,6 +92,7 @@ class MapController():
         lat_min,lat_max = geocoordinates[-2][1], geocoordinates[-1][1]
         weathermap = folium.Map(location=[lat,lon],\
         zoom_start=10, parse_html=True)
+        
         img_overlay = folium.raster_layers.ImageOverlay(name="map", image = imagePath,bounds=[[lat_min,lon_min],[lat_max,lon_max]])
         img_overlay.add_to(weathermap)
 
