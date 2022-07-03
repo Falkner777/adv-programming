@@ -2,3 +2,4 @@ weatherApp/keys.py
 weatherApp/venv
 weatherApp/Controllers/map.html
 weatherApp/Controllers/mapLayer.png
+weatherApp/.vscode
