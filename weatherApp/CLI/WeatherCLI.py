@@ -67,11 +67,10 @@ if __name__ == '__main__':
                     choiceMapper = {"Temperature": "temp", "Feels-Like": "feels_like", "Pressure": "pressure", "Humidity": "humidity",
                     "Soil Temperature": "dew_point", "Wind speed": "wind_speed", "Cloudiness": "clouds",
                     "UV": "uvi", "Precipitation": "pop"}
-                    try :
-                        x=input()
-                        if x in choiceMapper.keys():
-                            printhourly(x,cityName,currTime)   
-                    except BadRequest:
+                    x=input()
+                    if x in choiceMapper.keys():
+                        printhourly(x,cityName,currTime)
+                    else:       
                         print("You have entered an invalid city name!!\n\n")
         
                     # for hour in hourlyData:
