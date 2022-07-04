@@ -29,7 +29,10 @@ def printBasicData(data,cityname,currentTime):
     print(f"Wind-Speed:{data['wind']['speed']}")
     print()
     # print(f"------------------------------------------")
-
+def printhourly(data,cityname,currentTime):
+    for hour in hourlyData:
+        dt = datetime.datetime.fromtimestamp(hour["dt"],tz= tzinfo).strftime('%H:%M')
+        print(f"{dt}-{hour[choiceMapper[data]]}")
 if __name__ == '__main__':
     while True:
         print("----------------------------------------------------------------")
@@ -60,14 +63,19 @@ if __name__ == '__main__':
             match choice:
                 case '1':
                     hourlyData = WeatherCaller.getHourlyData(cityName)
-                    #print("Choose between 1.")
+                    print("Choose between: Temperature, Feels-Like, Pressurem Humidity, Soil Temperature, Wind speed, Cloudiness, UV, Precipitation")
                     choiceMapper = {"Temperature": "temp", "Feels-Like": "feels_like", "Pressure": "pressure", "Humidity": "humidity",
                     "Soil Temperature": "dew_point", "Wind speed": "wind_speed", "Cloudiness": "clouds",
                     "UV": "uvi", "Precipitation": "pop"}
+                    x=input()
+                    if x in choiceMapper.keys():
+                        printhourly(x,cityName,currTime)
+                    else:       
+                        print("You have entered an invalid city name!!\n\n")
         
-                    for hour in hourlyData:
-                        dt = datetime.datetime.fromtimestamp(hour["dt"],tz= tzinfo).strftime('%H:%M')
-                        print(f"{dt}-{hour['temp']}")
+                    # for hour in hourlyData:
+                    #     dt = datetime.datetime.fromtimestamp(hour["dt"],tz= tzinfo).strftime('%H:%M')
+                    #     print(f"{dt}-{hour['temp']}")
                     
                 
                     continue
