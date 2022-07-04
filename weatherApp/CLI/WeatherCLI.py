@@ -33,6 +33,10 @@ def printhourly(data,cityname,currentTime):
     for hour in hourlyData:
         dt = datetime.datetime.fromtimestamp(hour["dt"],tz= tzinfo).strftime('%H:%M')
         print(f"{dt}-{hour[choiceMapper[data]]}")
+def printdaily(data,cityname,currentTime):
+    for day in dailyData:
+        dt = datetime.datetime.fromtimestamp(day["dt"],tz= tzinfo).strftime('%D')
+        print(f"{dt} - {day[DailyMapper[data]]}")        
 if __name__ == '__main__':
     while True:
         print("----------------------------------------------------------------")
@@ -65,11 +69,11 @@ if __name__ == '__main__':
                     hourlyData = WeatherCaller.getHourlyData(cityName)
                     print("Choose between: Temperature, Feels-Like, Pressurem Humidity, Soil Temperature, Wind speed, Cloudiness, UV, Precipitation")
                     choiceMapper = {"Temperature": "temp", "Feels-Like": "feels_like", "Pressure": "pressure", "Humidity": "humidity",
-                    "Soil Temperature": "dew_point", "Wind speed": "wind_speed", "Cloudiness": "clouds",
+                    "Soil Temperature": "dew_point", "Wind speed":"wind_speed", "Cloudiness": "clouds",
                     "UV": "uvi", "Precipitation": "pop"}
-                    x=input()
-                    if x in choiceMapper.keys():
-                        printhourly(x,cityName,currTime)
+                    hourlyChoice=input()
+                    if hourlyChoice in choiceMapper.keys():
+                        printhourly(hourlyChoice,cityName,currTime)
                     else:       
                         print("You have entered an invalid city name!!\n\n")
         
@@ -80,6 +84,13 @@ if __name__ == '__main__':
                 
                     continue
                 case '2':
+                    dailyData = WeatherCaller.getDailyData(cityName)
+                    print("Choose between: Temperature, Feels-Like, Pressurem Humidity, Soil Temperature, Wind speed, Cloudiness, UV, Precipitation")
+                    DailyMapper = {"Temperature":"temp","Feels-Like":"feels_like","Pressure":"pressure","Humidity":"patrashumidity","Soil TEmperature":"dew_point","Cloudiness": "clouds",
+                    "UV": "uvi", "Precipitation": "pop" }
+                    dailyChoice=input()
+                    if dailyChoice in DailyMapper.keys():
+                        printdaily(dailyChoice,cityName,currTime)
                     continue
                 case '3':
                     continue
