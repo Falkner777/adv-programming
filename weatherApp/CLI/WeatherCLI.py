@@ -14,9 +14,9 @@ from Controllers.coordController import CoordController
 import keys
 from dataManager import DataManager
 from Controllers.weatherController import WeatherController
-units = "metric"
+
 API_KEY = keys.API_KEY
-WeatherCaller = WeatherController(API_KEY, units)
+
 
 def printBasicData(data,cityname,currentTime):
     print(f"------------------{cityname}------------------")
@@ -48,6 +48,11 @@ if __name__ == '__main__':
             cityName = input()
             if cityName == '0':
                 exit()
+            
+            
+            print("Please enter your desired type of units.")
+            units=input()
+            WeatherCaller = WeatherController(API_KEY, units)
             data = WeatherCaller.getWeatherCity(cityName)
             tzinfo = tzoffset(None, data["timezone"])  
             currTime = datetime.datetime.now(tzinfo).strftime("%H:%M:%S")
