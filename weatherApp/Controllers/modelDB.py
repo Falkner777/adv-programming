@@ -1,10 +1,12 @@
 import sqlite3 as sql
-import os,sys
-from statistics import mode
+import os,sys,time
+from datetime import datetime
 
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+
+sys.path.insert(0, path)
+
+
 
 class ModelDB():
 
@@ -47,38 +49,63 @@ class ModelDB():
             print(e)
             return  False
 
-
-def updateData(model,cityName,data,units):
+def getCityID(connector,cityName):
     """
-    It takes in a model, city name, data, and units. It then queries the database for the dates of the
-    city and the city's ID. It then iterates through the data and checks if the date is already in the
-    database. If it is, it skips it. If it isn't, it converts the temperature and feels like temperature
-    to the correct units and then inserts the data into the database
+    It takes a connector and a city name as input, and returns the city ID.
     
-    :param model: the model object
+    :param connector: the connector object that you created in the previous step
+    :param cityName: The name of the city you want to get the ID for
+    :return: The cityID is being returned.
+    """
+
+    idQuery = f'select Id from AREA where Name == "{cityName}"'
+    cityID = connector.selectData(idQuery)[0][0]
+
+    return cityID
+
+def updateCity(connector,cityName,controller):
+    cityQuery = "SELECT Name from AREA"
+    cities = connector.selectData(cityQuery)
+    cityName = (cityName.title(),)
+    print(cityName)
+    if cityName in cities:
+        return
+    
+    lon,lat = controller.getCityLonLat(cityName[0])
+    storeQuery = f"INSERT INTO AREA (lon,lat,Name)\
+        VALUES ({lon},{lat},'{cityName[0]}')"
+    connector.storeData(storeQuery)
+
+def updateDailyData(connector,cityName,data,units):
+    """
+    It takes in the connector, city name, data and units and updates the database with the new data
+    
+    :param connector: the connector object
     :param cityName: The name of the city you want to update
-    :param data: the data returned from the API call
+    :param data: the data from the API call
     :param units: 
     """
+
     dateQuery = f'select date from AREA,DAY where Name == "{cityName}" and area_id == AREA.Id'
-    idQuery = f'select Id from AREA where Name == "{cityName}"'
-    cityID = model.selectData(idQuery)[0][0]
-    dates = model.selectData(dateQuery)
+    cityID = getCityID(connector,cityName)
+    dates = connector.selectData(dateQuery)
     for day in data:
-        if day['dt'] in dates:
+        convertedDate = datetime.fromtimestamp(day['dt']).strftime("%d/%m/%Y")
+        convertedDate = (convertedDate,)
+        if convertedDate in dates:
             continue
         match units:
             case 'metric':
                 temp = day["temp"]
-                feels_like = day["feel_like"]
+                feels_like = day["feels_like"]
             case 'imperial':
                 temp = {k:round((v - 32)/1.8, 2) for k, v in day['temp'].items()}
                 feels_like = {k:round((v - 32)/1.8,2) for k, v in day['feels_like'].items()}
             case 'standard': 
                 temp = {k:round((v -273.15),2) for k, v in day['temp'].items()}
                 feels_like = {k:round((v -273.15),2) for k, v in day['feels_like'].items()}
-
-        dataTuple = (day["dt"],cityID,temp['max'],temp['min'],temp['day'],temp['morn'],temp['eve'],temp['night'],
+        dt = datetime.fromtimestamp(day["dt"]).strftime("%d/%m/%Y")
+        dataTuple = (dt,cityID,temp['max'],temp['min'],temp['day'],temp['morn'],temp['eve'],temp['night'],
                 day['pressure'],day['humidity'],day['wind_speed'],feels_like['morn'],
                 feels_like['day'],feels_like['eve'],feels_like['night'],day["clouds"],day["uvi"],day['pop'],day['dew_point'])
        
@@ -86,12 +113,7 @@ def updateData(model,cityName,data,units):
             pressure,humidity,wind_speed,feel_morn,feel_day,feel_eve,feel_night,\
                 clouds,uvi,pop,dew_point)\
                     VALUES{dataTuple}"
-        model.storeData(dailyQuery)    
+        connector.storeData(dailyQuery)    
 
-from Controllers.weatherController import WeatherController
-import keys
-contr = WeatherController(keys.API_KEY,"imperial")
 
-model = ModelDB("/home/dimitris/Desktop/weatherapp.sqlite3")
-updateData(model,"Patras",contr.getDailyData("Patras"),contr.getUnits())
 

@@ -1,8 +1,9 @@
 import os,sys
 
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+
+sys.path.insert(0, path)
+
 import requests
 from Exceptions.badRequest import BadRequest
 from Exceptions.emptyRequestException import EmptyRequestException

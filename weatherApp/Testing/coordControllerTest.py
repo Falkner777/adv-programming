@@ -1,8 +1,8 @@
 import unittest
 import os,sys
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+
+sys.path.insert(0, path)
 
 from Exceptions.emptyRequestException import EmptyRequestException
 import keys
@@ -22,3 +22,6 @@ class TestCoordControll(unittest.TestCase):
         self.assertEqual(tuple,type(cord.getCityLonLat("Peru")))
         self.assertEqual(tuple,type(cord.getCityLonLat("Sydney")))
         self.assertEqual(tuple,type(cord.getCityLonLat("New York")))
+
+if __name__ == '__main__':
+    unittest.main()

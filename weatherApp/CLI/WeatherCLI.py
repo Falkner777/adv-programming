@@ -1,22 +1,34 @@
-from ast import match_case
-import math
-import os,sys
 
-from pip import main
+import math
+
+import os,sys
+from pprint import pprint
+from re import M
+
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+sys.path.insert(0, path)
+
 from Exceptions.badRequest import BadRequest
 import datetime
-import requests
+
 from dateutil.tz import tzoffset
 from Controllers.coordController import CoordController
 import keys
 from dataManager import DataManager
 from Controllers.weatherController import WeatherController
+from Controllers.modelDB import ModelDB,updateCity,updateDailyData,getCityID
 
 API_KEY = keys.API_KEY
 
+def loadData(dbConnector,cityName):
+        dataQuery = f"SELECT  date, temp_max,humidity,pressure,wind_speed,uvi,clouds,pop from DAY \
+            where area_id == {getCityID(dbConnector,cityName)} LIMIT 50"
+
+        res = dbConnector.selectData(dataQuery)
+        colNames = ("Date","Temperature","Humidity","Pressure","Wind Speed","UVI","Clouds","Precipitation")
+        print(colNames)
+        for row in res:
+            pprint(row)
 
 def printBasicData(data,cityname,currentTime):
     print(f"------------------{cityname}------------------")
@@ -29,38 +41,49 @@ def printBasicData(data,cityname,currentTime):
     print(f"Wind-Speed:{data['wind']['speed']}")
     print()
     # print(f"------------------------------------------")
-def printhourly(data,cityname,currentTime):
+    
+def printhourly(data):
     for hour in hourlyData:
         dt = datetime.datetime.fromtimestamp(hour["dt"],tz= tzinfo).strftime('%H:%M')
         print(f"{dt}-{hour[choiceMapper[data]]}")
-def printdaily(data,cityname,currentTime):
+
+def printdaily(data):
     for day in dailyData:
         dt = datetime.datetime.fromtimestamp(day["dt"],tz= tzinfo).strftime('%D')
         print(f"{dt} - {day[DailyMapper[data]]}")        
+
 if __name__ == '__main__':
+    
+    dbConnector = ModelDB("./weatherApp/Data/weatherapp.sqlite3")
+    coordController = CoordController(API_KEY)
+    print(path)
+    print("----------------------------------------------------------------")
+    print("-------------------Welcome to the WeatherApp!-------------------")
+    print("----------------------------------------------------------------")
+    
     while True:
-        print("----------------------------------------------------------------")
-        print("-------------------Welcome to the WeatherApp!-------------------")
-        print("----------------------------------------------------------------")
-        print("Enter your desired location(type 0 for exit):")
         
+        print("Enter your desired location(type 0 for exit):")
         try:
             cityName = input()
             if cityName == '0':
                 exit()
             
-            
             print("Please enter your desired type of units.")
             units=input()
             WeatherCaller = WeatherController(API_KEY, units)
             data = WeatherCaller.getWeatherCity(cityName)
+            updateCity(dbConnector,cityName,coordController)
+            updateDailyData(dbConnector,cityName,WeatherCaller.getDailyData(cityName),units)
+            
             tzinfo = tzoffset(None, data["timezone"])  
             currTime = datetime.datetime.now(tzinfo).strftime("%H:%M:%S")
             printBasicData(data,cityName,currTime)
         except BadRequest:
             print("You have entered an invalid city name!!\n\n")
-
+        input("Press any key to continue...")
         while True:
+            
             print("Please enter if you would like to get extra information:\n\
                 1.Get hourly data\n\
                 2.Get weekly data\n\
@@ -78,7 +101,7 @@ if __name__ == '__main__':
                     "UV": "uvi", "Precipitation": "pop"}
                     hourlyChoice=input()
                     if hourlyChoice in choiceMapper.keys():
-                        printhourly(hourlyChoice,cityName,currTime)
+                        printhourly(hourlyChoice)
                     else:       
                         print("You have entered an invalid city name!!\n\n")
         
@@ -86,18 +109,23 @@ if __name__ == '__main__':
                     #     dt = datetime.datetime.fromtimestamp(hour["dt"],tz= tzinfo).strftime('%H:%M')
                     #     print(f"{dt}-{hour['temp']}")
                     
-                
+                    input("Press any key to continue...")
                     continue
                 case '2':
                     dailyData = WeatherCaller.getDailyData(cityName)
                     print("Choose between: Temperature, Feels-Like, Pressurem Humidity, Soil Temperature, Wind speed, Cloudiness, UV, Precipitation")
-                    DailyMapper = {"Temperature":"temp","Feels-Like":"feels_like","Pressure":"pressure","Humidity":"patrashumidity","Soil TEmperature":"dew_point","Cloudiness": "clouds",
+                    DailyMapper = {"Temperature":"temp","Feels-Like":"feels_like","Pressure":"pressure","Wind speed": "wind_speed","Humidity":"humidity","Soil Temperature":"dew_point","Cloudiness": "clouds",
                     "UV": "uvi", "Precipitation": "pop" }
                     dailyChoice=input()
                     if dailyChoice in DailyMapper.keys():
-                        printdaily(dailyChoice,cityName,currTime)
+                        printdaily(dailyChoice)
+                    else:
+                        print("\n!Invalid Input!\n")
+                    input("Press any key to continue...")
                     continue
                 case '3':
+                    loadData(dbConnector,cityName)
+                    input("Press any key to continue...")
                     continue
                 case '4':
                     break
@@ -106,6 +134,8 @@ if __name__ == '__main__':
                 case _:
                     print("\n\nPlease choose an integer value between 1 and 5\n\n")
                     continue
+            
+            
 
         # input("\n\nPress Enter to continue...")
   
