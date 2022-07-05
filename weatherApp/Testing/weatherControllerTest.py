@@ -2,8 +2,8 @@
 import unittest
 import os,sys
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+sys.path.insert(0, path)
+
 from Controllers.weatherController import WeatherController
 from Exceptions.badRequest import BadRequest
 from Exceptions.emptyRequestException import EmptyRequestException
@@ -43,3 +43,7 @@ class TestWeatherControll(unittest.TestCase):
         self.assertEqual(7,len(weathCont.getDailyData("Munich")))
         self.assertEqual(7,len(weathCont.getDailyData("Vienna")))
         self.assertEqual(7,len(weathCont.getDailyData("Madrid")))
+    
+
+if __name__ == '__main__':
+    unittest.main()

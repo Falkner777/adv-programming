@@ -1,8 +1,9 @@
 
 import os,sys
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+
+sys.path.insert(0, path)
+
 from Controllers.coordController import CoordController
 import keys
 import requests
@@ -79,7 +80,7 @@ class MapController():
         imageData = data.content
         image = Image.open(io.BytesIO(imageData))
         
-        imagePath = "./Controllers/mapLayer.png"
+        imagePath = f".{os.path.sep}Controllers{os.path.sep}mapLayer.png"
         image.save(imagePath)
 
         imgForMap = IMAGE.load(imagePath)
@@ -92,6 +93,7 @@ class MapController():
         lat_min,lat_max = geocoordinates[-2][1], geocoordinates[-1][1]
         weathermap = folium.Map(location=[lat,lon],\
         zoom_start=10, parse_html=True)
+        
         img_overlay = folium.raster_layers.ImageOverlay(name="map", image = imagePath,bounds=[[lat_min,lon_min],[lat_max,lon_max]])
         img_overlay.add_to(weathermap)
 

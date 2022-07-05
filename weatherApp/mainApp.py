@@ -1,9 +1,11 @@
+import enum
+from multiprocessing.spawn import import_main_path
 import sys,os
 
 
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.insert(0,parentPath)
+sys.path.insert(0, path)
+
 
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
@@ -13,6 +15,7 @@ from Exceptions.badRequest import BadRequest
 from dataManager import DataManager
 from Controllers.weatherController import WeatherController
 from Controllers.mapController import MapController
+from Controllers.coordController import CoordController
 import GUISnResources.weatherGUI as weatherGUI
 from GUISnResources.messageBox import MessageBox
 import keys
@@ -22,7 +25,9 @@ from matplotlib import pyplot as plt
 from GUISnResources.plotWindow import Ui_MainWindow as PlotGuiDaily
 from GUISnResources.plotWindowHourly import Ui_MainWindow as PlotGuiHourly
 from GUISnResources.mapPlotGUI import Ui_MainWindow as MapPlotGui
+from GUISnResources.historyDataGui import HistoryDataGui
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from Controllers.modelDB import ModelDB,updateDailyData,getCityID,updateCity
 import sys
 API_KEY = keys.API_KEY
 
@@ -36,13 +41,15 @@ class WeatherApp(qtw.QWidget):
         self.GUI = weatherGUI.Ui_Form()
         self.GUI.setupUi(self)
         self.GUI.stackedWidget.setCurrentIndex(0)
-
+        self.dbConnector = ModelDB(f".{os.path.sep}Data{os.path.sep}weatherapp.sqlite3")
         self.GUI.searchButton.clicked.connect(self.search)
         self.mapControl = MapController(API_KEY)
         self.GUI.goBackButton.clicked.connect(self.goBack)
         self.GUI.sevenDaysButton.clicked.connect(self.sevenDayPlot)
         self.GUI.hourlyButton.clicked.connect(self.hourlyPlot)
         self.GUI.mapsButton.clicked.connect(self.mapPlot)
+        self.GUI.historyButton.clicked.connect(self.showHistoryData)
+        self.coordController = CoordController(keys.API_KEY)
         self.show()
 
     def search(self):
@@ -61,13 +68,16 @@ class WeatherApp(qtw.QWidget):
             self.units = "imperial"
         self.WeatherCaller = WeatherController(API_KEY, self.units)
 
-        self.cityName = self.GUI.searchEdit.text()
+        self.cityName = self.GUI.searchEdit.text().title()
         if self.cityName == "":
             popMessage = MessageBox(
                 "Please search for a location!", "Empty Request")
             popMessage.createMessage()
             return
         try:
+            updateCity(self.dbConnector,self.cityName,self.coordController)
+   
+            updateDailyData(self.dbConnector,self.cityName,self.WeatherCaller.getDailyData(self.cityName),self.units)
             data = self.WeatherCaller.getWeatherCity(self.cityName)
             info = DataManager.returnCurrentInfo(data)
             self.GUI.humidityValue.setText(str(info["humidity"]) + "%")
@@ -112,6 +122,9 @@ class WeatherApp(qtw.QWidget):
         return qtg.QPixmap(":/icons/icons/"+icons[icon].strip())
 
     def sevenDayPlot(self):
+        """
+        It creates a new window with a combo box and a plot button.
+        """
         self.plotWindow = qtw.QMainWindow()
         self.windowGUI = PlotGuiDaily()
         self.windowGUI.setupUi(self.plotWindow)
@@ -129,6 +142,10 @@ class WeatherApp(qtw.QWidget):
         self.plotWindow.show()
 
     def hideComboBoxes(self):
+        """
+        If the user selects "Temperature" or "Feels-Like" from the drop-down menu, then the checkboxes
+        will be visible. Otherwise, they will be hidden
+        """
         if self.windowGUI.comboBox.currentText() == "Temperature" or self.windowGUI.comboBox.currentText() == "Feels-Like":
             for box in self.checkBoxes:
                 box.setVisible(True)
@@ -236,14 +253,36 @@ class WeatherApp(qtw.QWidget):
         self.mapLayerWindow.show()
 
     def showMap(self,layer):
-        pass
+        
         self.mapControl.setMap(self.cityName,layer)
         self.mapWindow = QWebEngineView()
-        self.mapWindow.load(qtc.QUrl.fromLocalFile("/home/dimitris/adv_programming/adv-programming/weatherApp/Controllers/map.html"))
+        self.mapWindow.load(qtc.QUrl.fromLocalFile(path + f"{os.path.sep}Controllers{os.path.sep}map.html"))
         self.mapWindow.show()
 
-        
+    def showHistoryData(self):
+        self.historyWindow = qtw.QMainWindow()
+        self.historyGui = HistoryDataGui()
+        self.historyGui.setupUi(self.historyWindow)
+        self.historyGui.tableWidget.setRowCount(50)
+        self.loadData()
+        self.historyWindow.show()
 
+    def loadData(self):
+        dataQuery = f"SELECT  date, temp_max,humidity,pressure,wind_speed,uvi,clouds,pop from DAY \
+            where area_id == {getCityID(self.dbConnector,self.cityName)} LIMIT 50"
+
+        res = self.dbConnector.selectData(dataQuery)
+        for ind,row in enumerate(res):
+            row = tuple(map(lambda x: str(x),row))
+            self.historyGui.tableWidget.setItem(ind,0,qtw.QTableWidgetItem(row[0]))
+            self.historyGui.tableWidget.setItem(ind,1,qtw.QTableWidgetItem(row[1]))
+            self.historyGui.tableWidget.setItem(ind,2,qtw.QTableWidgetItem(row[2]))
+            self.historyGui.tableWidget.setItem(ind,3,qtw.QTableWidgetItem(row[3]))
+            self.historyGui.tableWidget.setItem(ind,4,qtw.QTableWidgetItem(row[4]))
+            self.historyGui.tableWidget.setItem(ind,5,qtw.QTableWidgetItem(row[5]))
+            self.historyGui.tableWidget.setItem(ind,6,qtw.QTableWidgetItem(row[6]))
+            self.historyGui.tableWidget.setItem(ind,7,qtw.QTableWidgetItem(row[7]))
+        
     def goBack(self):
         self.GUI.stackedWidget.setCurrentIndex(0)
 

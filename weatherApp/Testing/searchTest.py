@@ -2,8 +2,9 @@ import unittest
 import os,sys
 
 path = os.getcwd()
-parentPath = os.path.dirname(path) + "/weatherApp"
-sys.path.append(parentPath)
+
+sys.path.insert(0, path)
+
 
 from mainApp import WeatherApp
 import PyQt5.QtWidgets as qtw
