@@ -80,7 +80,7 @@ class MapController():
         imageData = data.content
         image = Image.open(io.BytesIO(imageData))
         
-        imagePath = "./Controllers/mapLayer.png"
+        imagePath = f".{os.path.sep}Controllers{os.path.sep}mapLayer.png"
         image.save(imagePath)
 
         imgForMap = IMAGE.load(imagePath)

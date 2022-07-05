@@ -36,30 +36,6 @@ class DataManager():
         return timestamps
     
 
-    @staticmethod
-    def returnTemperaturesHourly(data, feels_like =0):
-        """
-        It takes in a list of dictionaries and returns a list of temperatures or feels_like temperatures
-        
-        :param data: This is the data that is returned from the API
-        :param feels_like: if set to 1, returns the feels_like temperatures, else returns the actual
-        temperatures, defaults to 0 (optional)
-        :return: a list of temperatures or feels_like temperatures.
-        """
-        if not isinstance(data,list):
-            raise TypeError(f"Data type not acceptable: expected <class 'list'>, <{type(data)}> found")
-        temperatures = []
-        feels_like = []
-
-    
-        if feels_like:
-            for feels in data["feels_like"]:
-                feels_like.append(feels)
-            return feels_like
-        else:
-            for temp in data["temp"]:
-                temperatures.append(temp)
-            return temperatures
 
     @staticmethod
     def returnTemperaturesDaily(data, morn=1, day=0, eve=0, night=0, minn=0, maxx=0, feels=0):
@@ -159,6 +135,8 @@ class DataManager():
         :param dataName: The name of the data you want to return
         :return: A list of the values of the dataName key in the data dictionary.
         """
+        if not isinstance(data,list):
+            raise TypeError(f"Data type not acceptable: expected <class 'list'>, <{type(data)}> found")
         toReturn = []
         if dataName in data[0].keys():
             for dataSlice in data:

@@ -41,7 +41,7 @@ class WeatherApp(qtw.QWidget):
         self.GUI = weatherGUI.Ui_Form()
         self.GUI.setupUi(self)
         self.GUI.stackedWidget.setCurrentIndex(0)
-        self.dbConnector = ModelDB("./Data/weatherapp.sqlite3")
+        self.dbConnector = ModelDB(f".{os.path.sep}Data{os.path.sep}weatherapp.sqlite3")
         self.GUI.searchButton.clicked.connect(self.search)
         self.mapControl = MapController(API_KEY)
         self.GUI.goBackButton.clicked.connect(self.goBack)
@@ -256,7 +256,7 @@ class WeatherApp(qtw.QWidget):
         
         self.mapControl.setMap(self.cityName,layer)
         self.mapWindow = QWebEngineView()
-        self.mapWindow.load(qtc.QUrl.fromLocalFile(path + "/Controllers/map.html"))
+        self.mapWindow.load(qtc.QUrl.fromLocalFile(path + f"{os.path.sep}Controllers{os.path.sep}map.html"))
         self.mapWindow.show()
 
     def showHistoryData(self):

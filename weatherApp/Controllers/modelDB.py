@@ -64,6 +64,14 @@ def getCityID(connector,cityName):
     return cityID
 
 def updateCity(connector,cityName,controller):
+    """
+    It takes in a city name, and if it's not already in the database, it adds it
+    
+    :param connector: the connector object
+    :param cityName: The name of the city you want to add to the database
+    :param controller: the controller object
+    :return: A list of tuples containing the name of the city and the number of stores in that city.
+    """
     cityQuery = "SELECT Name from AREA"
     cities = connector.selectData(cityQuery)
     cityName = (cityName.title(),)

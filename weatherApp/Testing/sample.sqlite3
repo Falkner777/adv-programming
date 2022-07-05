@@ -1,0 +1,31 @@
+
+CREATE TABLE IF NOT EXISTS DAY (
+	"date"	TEXT NOT NULL,
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"area_id"	INTEGER NOT NULL,
+	"temp_max"	REAL NOT NULL,
+	"temp_min"	REAL NOT NULL,
+	"temp_day"	REAL NOT NULL,
+	"temp_morn"	REAL NOT NULL,
+	"temp_eve"	REAL NOT NULL,
+	"temp_night"	REAL NOT NULL,
+	"pressure"	REAL NOT NULL,
+	"humidity"	REAL NOT NULL,
+	"wind_speed"	REAL NOT NULL,
+	"feel_day"	REAL NOT NULL,
+	"feel_morn"	REAL NOT NULL,
+	"feel_eve"	REAL NOT NULL,
+	"feel_night"	REAL NOT NULL,
+	"clouds"	REAL NOT NULL,
+	"uvi"	REAL NOT NULL,
+	"pop"	REAL NOT NULL,
+	"dew_point"	REAL NOT NULL,
+	FOREIGN KEY("area_id") REFERENCES AREA("Id")
+);
+
+CREATE TABLE IF NOT EXISTS AREA (
+	"lon"	TEXT NOT NULL,
+	"lat"	TEXT NOT NULL,
+	"Name"	TEXT NOT NULL,
+	"Id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
