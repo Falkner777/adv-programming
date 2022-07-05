@@ -12,7 +12,22 @@ Although not advisable you can do so without a virtual environment by downloadin
 
 To create a virtual environment in windows (VSCode): use 
 ```bash
-python -m venv venv
+python3.10 -m venv venv
 ```
 , in the terminal. You will be met with a message asking if you want to use the virtual environment as the workspace
 folder. Click "Yes". Open a new terminal and you are now working in the virtual environment.
+
+For the linux installation you create a virtual environment using
+```bash
+python3.10 -m venv /venv
+```
+Activate the virtual environment 
+```bash
+source ./venv/bin/activate
+```
+
+For both installations you need to have an api key for OpenWeatherMap APIs and then create a .py file names "keys".Inside the python file create a variable like this
+```python
+API_KEY = <your key here>
+```
+and you should have a working application
