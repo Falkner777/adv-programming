@@ -81,8 +81,8 @@ def printdaily(data):
 
 if __name__ == '__main__':
     
-    # dbConnector = ModelDB("./weatherApp/Data/weatherapp.sqlite3")
     dbConnector = ModelDB("./Data/weatherapp.sqlite3")
+   
     coordController = CoordController(API_KEY)
     print(path)
     print("----------------------------------------------------------------")
